@@ -1,0 +1,3 @@
+Rest_Cards:
+    type: rest
+    resource: "@AppBundle/Resources/config/routing_rest.yml"

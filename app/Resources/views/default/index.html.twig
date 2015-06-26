@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for card in cards %}
+    * {{ card.name }}<br/>
+    {% else %}
+    Sorry, no cards.
+    {% endfor %}
+    <form method="POST" action="/">
+        <button type="submit">Parse</button>
+    </form>
+{% endblock %}

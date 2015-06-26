@@ -1,0 +1,13 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+index:
+    resource: AppBundle\RestController\DefaultRestController
+    type: rest
+    prefix: /api
+
+search:
+    resource: AppBundle\RestController\SearchRestController
+    type: rest
+    prefix: /api
