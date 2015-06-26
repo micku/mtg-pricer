@@ -670,7 +670,7 @@ class Card
      *
      * @param \AppBundle\Entity\Set $sets
      */
-    public function removeSet(\AppBundle\Entity\Set $sets)
+    public function removeSet(\AppBundle\Entity\BlockSet $sets)
     {
         $this->sets->removeElement($sets);
     }
