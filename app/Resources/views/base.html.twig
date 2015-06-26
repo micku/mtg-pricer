@@ -2,11 +2,35 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+        <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
+        <script src="https://fb.me/react-with-addons-0.13.3.js"></script>
+        <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+        <script type="text/jsx" src="{{ asset('js/app.js') }}"></script>
     </head>
     <body>
+        <nav class="blue-grey darken-1">
+            <div class="nav-wrapper container">
+                <a class="brand-logo">MTG Search</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <!--
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                    <li><a href="collapsible.html">JavaScript</a></li>
+                    -->
+                </ul>
+            </div>
+        </nav>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>

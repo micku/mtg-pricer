@@ -1,12 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% for card in cards %}
-    * {{ card.name }}<br/>
-    {% else %}
-    Sorry, no cards.
-    {% endfor %}
-    <form method="POST" action="/">
-        <button type="submit">Parse</button>
-    </form>
+    <div class="section">
+        <div class="container">
+            <div class="row center">
+                <div id="app"></div>
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m4">
+                    <form method="POST" action="/">
+                        <button type="submit" class="btn waves-effect waves-light red">Parse
+                            <i class="material-icons right">error</i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
