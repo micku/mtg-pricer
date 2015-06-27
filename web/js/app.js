@@ -89,7 +89,7 @@ var FoundCard = React.createClass({
     render: function() {
         var image_url = 'http://api.mtgdb.info/content/card_images/' + this.props.multiverse_id + '.jpeg';
         return (
-                <div className="foundCard col s12 m4">
+                <div className="foundCard col s12 m2">
                     <div className="card small blue-grey darken-1">
                         <div className="card-image">
                           <img src={image_url} />
