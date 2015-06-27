@@ -3,15 +3,26 @@
 {% block body %}
     <div class="section">
         <div class="container">
-            <div class="row center">
-                <div id="app"></div>
+            <div class="row">
+                <div class="col l10">
+                    <div class="section">
+                        <div id="app"></div>
+                    </div>
+                </div>
+                <div class="col l2">
+                    <div class="toc-wrapper pin-top">
+                        <div class="section">
+                            Temp
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="section">
-        <div class="container">
-            <div class="row">
-                <div class="col s12 m4">
+    <div class="container">
+        <div class="row">
+            <div class="section">
+                <div class="col s12 m2">
                     <form method="POST" action="/">
                         <button type="submit" class="btn waves-effect waves-light red">Parse
                             <i class="material-icons right">error</i>
