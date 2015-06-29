@@ -14,9 +14,9 @@
 
         <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
-        <script src="https://fb.me/react-with-addons-0.13.3.js"></script>
+        <!--script src="https://fb.me/react-with-addons-0.13.3.js"></script>
         <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
-        <script type="text/jsx" src="{{ asset('js/app.js') }}"></script>
+        <script type="text/jsx" src="{{ asset('js/app.js') }}"></script-->
     </head>
     <body>
         <nav class="blue-grey darken-1">
@@ -33,5 +33,6 @@
         </nav>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
+        <script src="{{ asset('js/bundle.js') }}"></script>
     </body>
 </html>

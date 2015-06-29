@@ -43,3 +43,6 @@
 /web/bundles/
 /web/uploads/
 
+# NPM
+web/node_modules/
+web/js/bundle.js

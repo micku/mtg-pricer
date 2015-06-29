@@ -3,3 +3,11 @@
     margin-left: -10%;
     width: 120%;
 }
+
+.card .card-image .card-title.cardName {
+    margin: 0;
+    padding: 0 5px;
+    width: 100%;
+    background: rgb(0, 0, 0); /* Fall-back for browsers that don't support rgba */
+    background: rgba(0, 0, 0, .3);
+}
