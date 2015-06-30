@@ -1,4 +1,6 @@
-mtg-pricer
-==========
+# mtg-pricer
 
-A Symfony project created on June 24, 2015, 2:16 pm.
+## Create bundle.min.js
+
+    cd web
+    node_modules/browserify/bin/cmd.js . | node_modules/uglify-js/bin/uglifyjs -cm > js/bundle.min.js

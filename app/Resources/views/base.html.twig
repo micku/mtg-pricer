@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -33,6 +32,10 @@
         </nav>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
-        <script src="{{ asset('js/bundle.js') }}"></script>
+        {% if app.environment == 'prod' %}
+            <script src="{{ asset('js/bundle.min.js') }}"></script>
+        {% else %}
+            <script src="{{ asset('js/bundle.js') }}"></script>
+        {% endif %}
     </body>
 </html>
