@@ -1,6 +1,11 @@
+var SearchActionCreators = require('../actions/SearchActionCreators');
 var React = require('react');
 
 var SearchField = React.createClass({
+    getInitialState: function() {
+        return {text: ''};
+    },
+
     componentDidMount: function() {
         $(React.findDOMNode(this.refs.searchTerm)).focus();
     },
@@ -9,7 +14,8 @@ var SearchField = React.createClass({
         e.preventDefault();
         var term = React.findDOMNode(this.refs.searchTerm).value.trim();
 
-        this.props.onSearchSubmit({'term': term});
+        SearchActionCreators.search(term);
+        //this.props.onSearchSubmit({'term': term});
         return;
     },
 
