@@ -18,3 +18,8 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    mkm_app_token:     'xxx'
+    mkm_app_secret:    'xxx'
+    mkm_access_token:  'xxx'
+    mkm_access_secret: 'xxx'

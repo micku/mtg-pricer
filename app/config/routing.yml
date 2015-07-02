@@ -11,3 +11,8 @@ search:
     resource: AppBundle\RestController\SearchRestController
     type: rest
     prefix: /api
+
+card_price:
+    resource: AppBundle\RestController\CardPriceRestController
+    type: rest
+    prefix: /api

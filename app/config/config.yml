@@ -7,6 +7,11 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    mkm:
+        app_token:     "%mkm_app_token%"
+        app_secret:    "%mkm_app_secret%"
+        access_token:  "%mkm_access_token%"
+        access_secret: "%mkm_access_secret%"
 
 framework:
     #esi:             ~
@@ -97,3 +102,9 @@ fos_rest:
         default_engine: twig
     routing_loader:
         default_format: json
+
+#mtg-pricer:
+#mkm_app_token:     "%mkm_app_token%"
+#mkm_app_secret:    "%mkm_app_secret%"
+#mkm_access_token:  "%mkm_access_token%"
+#mkm_access_secret: "%mkm_access_secret%"
