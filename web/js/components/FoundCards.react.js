@@ -10,9 +10,7 @@ function getStateFromStores() {
 
 function getCardListItem(card) {
     return (
-            <FoundCard multiverse_id={card.multiverse_id}>
-                {card.name}
-            </FoundCard>
+            <FoundCard card={card} />
            );
 }
 

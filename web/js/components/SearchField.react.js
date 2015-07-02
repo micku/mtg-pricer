@@ -30,7 +30,7 @@ var SearchField = React.createClass({
                         </div>
                         <div className="input-field col s4">
                             <button type="submit" className="btn waves-effect waves-light blue-grey lighten-3">Search
-                                <i className="material-icons right">search</i>
+                                <i className="fa fa-search fa-2x right"></i>
                             </button>
                         </div>
                     </form>

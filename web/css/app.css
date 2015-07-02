@@ -11,3 +11,15 @@
     background: rgb(0, 0, 0); /* Fall-back for browsers that don't support rgba */
     background: rgba(0, 0, 0, .3);
 }
+
+.card .card-content a {
+    color: #fff;
+}
+
+.toc-wrapper {
+    max-width: 172px;
+}
+
+.toc-wrapper .wishlist .collection-item {
+    padding: 5px;
+}

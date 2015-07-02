@@ -5,7 +5,7 @@ var assign = require('object-assign');
 
 var ActionTypes = PricerConstants.ActionTypes;
 var SEARCH_EVENT = 'search';
-var RECEIVE_EVENT = 'search';
+var RECEIVE_EVENT = 'receive';
 
 var _cards = [];
 var _term = '';
@@ -20,7 +20,7 @@ var CardStore = assign({}, EventEmitter.prototype, {
     },
 
     removeSearchListener: function(callback) {
-        this.removeListener(CHANGE_EVENT, callback);
+        this.removeListener(SEARCH_EVENT, callback);
     },
 
     emitReceiveByTerm: function() {
@@ -49,8 +49,6 @@ CardStore.dispatchToken = PricerAppDispatcher.register(function(action) {
         case ActionTypes.RECEIVE_CARDS_LIST:
             _cards = action.cards;
             CardStore.emitReceiveByTerm();
-            break;
-        case ActionTypes.CLICK_ADD_CARD:
             break;
         case ActionTypes.SEARCH:
             _term = action.term;
