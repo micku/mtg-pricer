@@ -36,12 +36,14 @@ class ForeignName
     /**
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="foreignNames")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
+     * @Expose
      **/
     protected $card;
 
     /**
      * @ORM\ManyToOne(targetEntity="Language")
      * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
+     * @Expose
      **/
     protected $language;
 

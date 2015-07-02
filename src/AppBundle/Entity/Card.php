@@ -110,53 +110,62 @@ class Card
     /**
      * @ORM\ManyToOne(targetEntity="Rarity")
      * @ORM\JoinColumn(name="rarity_id", referencedColumnName="id", nullable=true)
+     * @Expose
      **/
     protected $rarity;
 
     /**
      * @ORM\OneToMany(targetEntity="ForeignName", mappedBy="card")
+     * @Expose
      **/
     protected $foreignNames;
 
     /**
      * @ORM\ManyToMany(targetEntity="Color", inversedBy="cards")
      * @ORM\JoinTable(name="cards_colors")
+     * @Expose
      **/
     protected $colors;
 
     /**
      * @ORM\ManyToMany(targetEntity="SuperType", inversedBy="cards")
      * @ORM\JoinTable(name="cards_superType")
+     * @Expose
      **/
     protected $superTypes;
 
     /**
      * @ORM\ManyToMany(targetEntity="Type", inversedBy="cards")
      * @ORM\JoinTable(name="cards_type")
+     * @Expose
      **/
     protected $types;
 
     /**
      * @ORM\ManyToMany(targetEntity="SubType", inversedBy="cards")
      * @ORM\JoinTable(name="cards_subType")
+     * @Expose
      **/
     protected $subTypes;
 
     /**
      * @ORM\ManyToMany(targetEntity="Legality", inversedBy="cards")
      * @ORM\JoinTable(name="cards_legality")
+     * @Expose
      **/
     protected $legalities;
 
     /**
      * @ORM\ManyToMany(targetEntity="Ruling", inversedBy="cards")
      * @ORM\JoinTable(name="cards_ruling")
+     * @Expose
      **/
     protected $rulings;
 
     /**
      * @ORM\ManyToMany(targetEntity="BlockSet", inversedBy="cards")
      * @ORM\JoinTable(name="cards_set")
+     * @Expose
      **/
     protected $sets;
 
