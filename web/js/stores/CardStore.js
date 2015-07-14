@@ -40,7 +40,7 @@ var CardStore = assign({}, EventEmitter.prototype, {
     },
 
     getAll: function() {
-        return _cards;
+        return { 'cards': _cards, 'search_term': _term};
     }
 });
 

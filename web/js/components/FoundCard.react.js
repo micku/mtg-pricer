@@ -14,6 +14,7 @@ var FoundCard = React.createClass({
                         <div className="card-content white-text">
                             <a onClick={this._onClick} href="#"><i className="fa fa-plus-square-o fa-2x right"></i></a>
                             <p className="cardName">{this.props.card.name}</p>
+                            <p className="foundTerm" dangerouslySetInnerHTML={this.foreignName(this.props.card, this.props.search_term)}></p>
                         </div>
                     </div>
                 </div>
@@ -23,6 +24,19 @@ var FoundCard = React.createClass({
     _onClick: function(e) {
         e.preventDefault();
         WishListCardActionCreators.createWishListItem(this.props.card);
+    },
+
+    foreignName: function(card, term) {
+        var regexp = new RegExp("(" + term + ")","ig");
+        var text = {
+            __html: 
+                "["+card.foreign_names[0].language.name+"] "+ card.foreign_names[0].name
+                .replace(
+                        regexp,
+                        '<i>$1</i>'
+                        )
+        };
+        return text;
     }
 });
 

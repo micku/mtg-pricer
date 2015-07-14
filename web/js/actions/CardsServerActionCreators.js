@@ -5,10 +5,11 @@ var ActionTypes = PricerConstants.ActionTypes;
 
 module.exports = {
 
-    receiveBySearchTerm: function(cards) {
+    receiveBySearchTerm: function(cards, search_term) {
         PricerAppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_CARDS_LIST,
-            cards: cards
+            cards: cards,
+            search_term: search_term
         });
     },
 };

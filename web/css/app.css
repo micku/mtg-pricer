@@ -16,6 +16,10 @@
     color: #fff;
 }
 
+.card .card-content .foundTerm i {
+    background-color: red;
+}
+
 .toc-wrapper {
     max-width: 172px;
 }
