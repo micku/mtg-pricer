@@ -23,3 +23,5 @@ parameters:
     mkm_app_secret:    'xxx'
     mkm_access_token:  'xxx'
     mkm_access_secret: 'xxx'
+
+    mongodb_server:     ''

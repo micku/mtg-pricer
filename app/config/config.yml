@@ -103,8 +103,13 @@ fos_rest:
     routing_loader:
         default_format: json
 
-#mtg-pricer:
-#mkm_app_token:     "%mkm_app_token%"
-#mkm_app_secret:    "%mkm_app_secret%"
-#mkm_access_token:  "%mkm_access_token%"
-#mkm_access_secret: "%mkm_access_secret%"
+doctrine_mongodb:
+    #default_commit_options: ~
+    connections:
+        default:
+            server: "%mongodb_server%"
+            options: {}
+    #default_database: test_database
+    document_managers:
+        default:
+            auto_mapping: true
