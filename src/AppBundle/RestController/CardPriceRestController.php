@@ -14,9 +14,9 @@ class CardPriceRestController extends Controller
 {
     /**
      * @Rest\View
-     * @Rest\Get("/card/{card_name}/", name="cardprice")
+     * @Rest\Get("/card/{card_id}/{card_name}/", name="cardprice")
      */
-    public function getCardPriceAction($card_name)
+    public function getCardPriceAction($card_id, $card_name)
     {
         $appToken           = $this->container->getParameter('mkm')['app_token'];
         $appSecret          = $this->container->getParameter('mkm')['app_secret'];
@@ -30,7 +30,17 @@ class CardPriceRestController extends Controller
         $cheapest = array_reduce($cards, function($a, $b) {
             return $a['priceGuide']['AVG'] < $b['priceGuide']['AVG'] ? $a : $b;
         }, array_shift($cards));
-        return $cheapest;
+
+        $price = new CardPrice();
+        $price->card_id = $card_id;
+        $price->prices = $cheapest['priceGuide'];
+        return $price;
         //return $apiOutput[2]['product'];
     }
+}
+
+class CardPrice
+{
+    public $card_id;
+    public $prices;
 }
