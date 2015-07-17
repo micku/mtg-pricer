@@ -16,44 +16,13 @@ class SearchRestController extends Controller
      */
     public function getSearchAction($term)
     {
-        $em = $this->getDoctrine()->getManager();
-        $cardsqb = $em->createQueryBuilder();
-        $cardsqb->select('c, n'
-            /*
-            'c.id',
-            'c.name',
-            'c.manaCost as mana_cost',
-            'c.cmc',
-            'c.type',
-            'c.text',
-            'c.flavor',
-            'c.artist',
-            'c.number',
-            'c.power',
-            'c.toughness',
-            'c.layout',
-            'c.multiverseId as multiverse_id',
-            'c.imageName as image_name',
-            'r.name as rarity',
-            'l.name as lang_found',
-            'n.name as lang_found_name'
-             */
-        )
-            ->from('AppBundle:Card', 'c')
-            ->leftJoin('c.foreignNames', 'n')
-            ->leftJoin('n.language', 'l')
-            ->leftJoin('c.rarity', 'r')
-            ->where($cardsqb->expr()->like('n.name', '?1'))
-            ;
-            //'c.colors',
-            //'c.superTypes as super_types',
-            //'c.types',
-            //'c.subTypes as sub_types',
-            //'c.legalities',
-            //'c.rulings',
-            //'c.sets',
-        $cardsqb->setParameters(array(1 => '%'.$term.'%'));
-        $cards = $cardsqb->getQuery()->getResult();
+        $em = $this->get('doctrine_mongodb')->getManager();
+        $cards = $em->createQueryBuilder('AppBundle:Card')
+            ->field('foreignNames.name')
+            ->equals(new \MongoRegex('/'.$term.'/i'))
+            ->getQuery()
+            ->execute()
+            ->toArray();
 
         return $cards;
     }
