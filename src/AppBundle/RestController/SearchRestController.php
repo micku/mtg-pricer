@@ -17,12 +17,18 @@ class SearchRestController extends Controller
     public function getSearchAction($term)
     {
         $em = $this->get('doctrine_mongodb')->getManager();
-        $cards = $em->createQueryBuilder('AppBundle:Card')
+        $cardsObjs = $em->createQueryBuilder('AppBundle:Card')
             ->field('foreignNames.name')
             ->equals(new \MongoRegex('/'.$term.'/i'))
             ->getQuery()
-            ->execute()
-            ->toArray();
+            ->execute();
+
+        $cards = Array();
+
+        foreach($cardsObjs as $key => $val)
+        {
+            $cards[] = $val;
+        }
 
         return $cards;
     }
