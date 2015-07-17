@@ -3,6 +3,7 @@
 namespace AppBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
@@ -102,16 +103,10 @@ class Card
     protected $imageName;
 
     /**
-     * @ORM\ReferenceMany(targetDocument="BlockSet", simple=true)
+     * @ORM\ReferenceOne(targetDocument="Rarity", simple=true, inversedBy="cards")
      * @Expose
      **/
-    protected $sets = array();
-
-    /**
-     * @ORM\EmbedMany(targetDocument="Color")
-     * @Expose
-     **/
-    protected $colors = array();
+    protected $rarity;
 
     /**
      * @ORM\EmbedMany(targetDocument="ForeignName")
@@ -119,11 +114,54 @@ class Card
      **/
     protected $foreignNames = array();
 
+    /**
+     * @ORM\ReferenceMany(targetDocument="Color", simple=true, inversedBy="cards")
+     * @Expose
+     **/
+    protected $colors;
+
+    /**
+     * @ORM\ReferenceMany(targetDocument="SuperType", simple=true, inversedBy="cards")
+     * @Expose
+     **/
+    protected $superTypes;
+
+    /**
+     * @ORM\ReferenceMany(targetDocument="Type", simple=true, inversedBy="cards")
+     * @Expose
+     **/
+    protected $types;
+
+    /**
+     * @ORM\ReferenceMany(targetDocument="SubType", simple=true, inversedBy="cards")
+     * @Expose
+     **/
+    protected $subTypes;
+
+    /**
+     * @ORM\ReferenceMany(targetDocument="Legality", simple=true, inversedBy="cards")
+     * @Expose
+     **/
+    protected $legalities;
+
+    /**
+     * @ORM\ReferenceMany(targetDocument="Ruling", simple=true, inversedBy="cards")
+     * @Expose
+     **/
+    protected $rulings;
+
+    /**
+     * @ORM\ReferenceMany(targetDocument="BlockSet", simple=true, inversedBy="cards")
+     * @Expose
+     **/
+    protected $sets;
+
     public function __construct()
     {
         //$this->rarity = new ArrayCollection();
         /*
         $this->foreignNames = new ArrayCollection();
+         */
 
         $this->colors = new ArrayCollection();
         $this->superTypes = new ArrayCollection();
@@ -132,7 +170,6 @@ class Card
         $this->legalities = new ArrayCollection();
         $this->rulings = new ArrayCollection();
         $this->sets = new ArrayCollection();
-         */
     }
 
     /**
@@ -575,5 +612,137 @@ class Card
     public function getColors()
     {
         return $this->colors;
+    }
+
+    /**
+     * Get foreignNames
+     *
+     * @return \Doctrine\Common\Collections\Collection $foreignNames
+     */
+    public function getForeignNames()
+    {
+        return $this->foreignNames;
+    }
+
+    /**
+     * Set rarity
+     *
+     * @param AppBundle\Document\Rarity $rarity
+     * @return self
+     */
+    public function setRarity(\AppBundle\Document\Rarity $rarity)
+    {
+        $this->rarity = $rarity;
+        return $this;
+    }
+
+    /**
+     * Get rarity
+     *
+     * @return AppBundle\Document\Rarity $rarity
+     */
+    public function getRarity()
+    {
+        return $this->rarity;
+    }
+
+    /**
+     * Add superType
+     *
+     * @param AppBundle\Document\SuperType $superType
+     */
+    public function addSuperType(\AppBundle\Document\SuperType $superType)
+    {
+        $this->superTypes[] = $superType;
+    }
+
+    /**
+     * Get superTypes
+     *
+     * @return \Doctrine\Common\Collections\Collection $superTypes
+     */
+    public function getSuperTypes()
+    {
+        return $this->superTypes;
+    }
+
+    /**
+     * Add type
+     *
+     * @param AppBundle\Document\Type $type
+     */
+    public function addType(\AppBundle\Document\Type $type)
+    {
+        $this->types[] = $type;
+    }
+
+    /**
+     * Get types
+     *
+     * @return \Doctrine\Common\Collections\Collection $types
+     */
+    public function getTypes()
+    {
+        return $this->types;
+    }
+
+    /**
+     * Add subType
+     *
+     * @param AppBundle\Document\SubType $subType
+     */
+    public function addSubType(\AppBundle\Document\SubType $subType)
+    {
+        $this->subTypes[] = $subType;
+    }
+
+    /**
+     * Get subTypes
+     *
+     * @return \Doctrine\Common\Collections\Collection $subTypes
+     */
+    public function getSubTypes()
+    {
+        return $this->subTypes;
+    }
+
+    /**
+     * Add legality
+     *
+     * @param AppBundle\Document\Legality $legality
+     */
+    public function addLegality(\AppBundle\Document\Legality $legality)
+    {
+        $this->legalities[] = $legality;
+    }
+
+    /**
+     * Get legalities
+     *
+     * @return \Doctrine\Common\Collections\Collection $legalities
+     */
+    public function getLegalities()
+    {
+        return $this->legalities;
+    }
+
+    /**
+     * Add ruling
+     *
+     * @param AppBundle\Document\Ruling $ruling
+     */
+    public function addRuling(\AppBundle\Document\Ruling $ruling)
+    {
+        $this->rulings[] = $ruling;
+    }
+
+    /**
+     * Get rulings
+     *
+     * @return \Doctrine\Common\Collections\Collection $rulings
+     */
+    public function getRulings()
+    {
+        return $this->rulings;
     }
 }

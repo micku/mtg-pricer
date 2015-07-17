@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Document;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
@@ -10,8 +10,7 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
- * @ORM\Entity
- * @ORM\Table("ruling")
+ * @ORM\EmbeddedDocument
  *
  * @ExclusionPolicy("all")
  */
@@ -19,43 +18,21 @@ class Ruling
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      * @Expose
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Date
      * @Expose
      */
     protected $date;
 
     /**
-     * @ORM\Column(type="string", length=2048)
+     * @ORM\String
      * @Expose
      */
     protected $text;
-
-    /**
-     * ManyToMany(targetEnetity="Card", mappedBy="rulings")
-     **/
-    protected $cards;
-
-    public function __construct()
-    {
-        $this->cards = new ArrayCollection();
-    }
-
-    public function addCard(Card $card)
-    {
-        $this->cards[] = $card;
-    }
-
-    public function getCards()
-    {
-        return $this->cards;
-    }
 
     /**
      * Get id

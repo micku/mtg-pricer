@@ -35,6 +35,7 @@ class ImportCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->output = $output;
         $set = $input->getArgument('set-code');
         if ($set) {
             $filename = strtoupper($set);
@@ -95,23 +96,7 @@ class ImportCommand extends ContainerAwareCommand
                 $newCard->setLayout(@$card['layout']);
                 $newCard->setMultiverseId(@$card['multiverseid']);
 
-                if (array_key_exists('colors', $card))
-                {
-                    foreach($card['colors'] as &$colorstr)
-                    {
-                        $color = $doctrine->getRepository('AppBundle:Color')
-                            ->findOneBy(array('name' => $colorstr));
-                        if (!$color)
-                        {
-                            $color = new \AppBundle\Document\Color();
-                            $color->setName($colorstr);
-                            $dbmanager->persist($color);
-                            $dbmanager->flush();
-                        }
-                        $newCard->addColor($color);
-                    }
-                }
-
+                //// Add Foreign names and languages
                 $languagestr = 'English';
                 $namestr = $card['name'];
 
@@ -128,9 +113,6 @@ class ImportCommand extends ContainerAwareCommand
                 $name = new \AppBundle\Document\ForeignName();
                 $name->setName($namestr);
                 $name->setLanguage($language);
-                //$name->setCard($newCard);
-                //$dbmanager->persist($name);
-                //$dbmanager->flush();
                 $newCard->addForeignName($name);
 
                 if (array_key_exists('foreignNames', $card))
@@ -153,12 +135,87 @@ class ImportCommand extends ContainerAwareCommand
                         $name = new \AppBundle\Document\ForeignName();
                         $name->setName($namestr);
                         $name->setLanguage($language);
-                        //$name->setCard($newCard);
-                        //$dbmanager->persist($name);
                         $newCard->addForeignName($name);
                     }
                 }
 
+                //// Add Types
+                $types = $this->insertReference(
+                    $card,
+                    'types',
+                    $dbmanager,
+                    $doctrine,
+                    'AppBundle:Type',
+                    '\AppBundle\Document\Type'
+                );
+                foreach($types as &$type)
+                {
+                    $newCard->addType($type);
+                }
+
+                //// Add Rarity
+                $rarities = $this->insertReference(
+                    $card,
+                    'rarity',
+                    $dbmanager,
+                    $doctrine,
+                    'AppBundle:Rarity',
+                    '\AppBundle\Document\Rarity'
+                );
+                foreach($rarities as &$rarity)
+                {
+                    $newCard->setRarity($rarity);
+                }
+
+                //// Add SubTypes
+                $subTypes = $this->insertReference(
+                    $card,
+                    'subtypes',
+                    $dbmanager,
+                    $doctrine,
+                    'AppBundle:SubType',
+                    '\AppBundle\Document\SubType'
+                );
+                foreach($subTypes as &$subType)
+                {
+                    $newCard->addSubType($subType);
+                }
+
+                //// Add SuperTypes
+                $superTypes = $this->insertReference(
+                    $card,
+                    'superTypes',
+                    $dbmanager,
+                    $doctrine,
+                    'AppBundle:SuperType',
+                    '\AppBundle\Document\SuperType'
+                );
+                foreach($superTypes as &$superType)
+                {
+                    $newCard->addType($superType);
+                }
+
+                //// Add Legalities
+                //ToDo
+
+                //// Add Rulings
+                //ToDo
+
+                //// Add Colors
+                $colors = $this->insertReference(
+                    $card,
+                    'colors',
+                    $dbmanager,
+                    $doctrine,
+                    'AppBundle:Color',
+                    '\AppBundle\Document\Color'
+                );
+                foreach($colors as &$color)
+                {
+                    $newCard->addColor($color);
+                }
+
+                //// Persist Card object
                 $dbmanager->persist($newCard);
                 $dbmanager->flush();
 
@@ -166,13 +223,84 @@ class ImportCommand extends ContainerAwareCommand
             }
             else
             {
+                /*
+                $newCard = $newCard[0];
                 $newCard->addSet($set);
 
                 $dbmanager->persist($newCard);
                 $dbmanager->flush();
 
                 $output->writeln('Card '.$newCard->getName().' written.');
+                 */
             }
         }
+    }
+
+    protected function insertReference(
+        $card,
+        $cardIndex,
+        $dbmanager,
+        $doctrine,
+        $doctrineType,
+        $type
+    )
+    {
+        $objs = Array();
+        if (array_key_exists($cardIndex, $card))
+        {
+            $this->output->writeln($cardIndex);
+            $this->output->writeln('|_'.gettype($card[$cardIndex]));
+
+            if (gettype($card[$cardIndex]) == 'array')
+            {
+                $this->output->writeln('  |_In Array');
+                foreach($card[$cardIndex] as &$valstr)
+                {
+                    $objs[] = $this->createInstance(
+                        $doctrineType,
+                        $valstr,
+                        $type,
+                        $dbmanager,
+                        $doctrine
+                    );
+                }
+            }
+            else
+            {
+                $this->output->writeln('  |_In Else');
+                $objs[] = $this->createInstance(
+                    $doctrineType,
+                    $card[$cardIndex],
+                    $type,
+                    $dbmanager,
+                    $doctrine
+                );
+            }
+        }
+        return $objs;
+    }
+
+    protected function createInstance(
+        $doctrineType,
+        $valstr,
+        $type,
+        $dbmanager,
+        $doctrine
+    )
+    {
+        $val = $doctrine->getRepository($doctrineType)
+            ->findOneBy(array('name' => $valstr));
+        if (!$val)
+        {
+            $val = new $type();
+            if (method_exists($val, 'setName'))
+            {
+                $val->setName($valstr);
+            }
+
+            $dbmanager->persist($val);
+            $dbmanager->flush();
+        }
+        return $val;
     }
 }

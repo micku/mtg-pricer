@@ -3,6 +3,7 @@
 namespace AppBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
@@ -27,27 +28,15 @@ class Color
      */
     protected $name;
 
-    /*
-      ManyToMany(targetEnetity="Card", mappedBy="colors")
-    protected $cards;
+    /**
+     * @ORM\ReferenceMany(targetDocument="Card", mappedBy="colors")
      */
+    protected $cards;
 
     public function __construct()
     {
-        //$this->cards = new ArrayCollection();
+        $this->cards = new ArrayCollection();
     }
-
-    /*
-    public function addCard(Card $card)
-    {
-        $this->cards[] = $card;
-    }
-
-    public function getCards()
-    {
-        return $this->cards;
-    }
-     */
 
     /**
      * Get id
@@ -80,5 +69,35 @@ class Color
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Add card
+     *
+     * @param AppBundle\Document\Card $card
+     */
+    public function addCard(\AppBundle\Document\Card $card)
+    {
+        $this->cards[] = $card;
+    }
+
+    /**
+     * Remove card
+     *
+     * @param AppBundle\Document\Card $card
+     */
+    public function removeCard(\AppBundle\Document\Card $card)
+    {
+        $this->cards->removeElement($card);
+    }
+
+    /**
+     * Get cards
+     *
+     * @return \Doctrine\Common\Collections\Collection $cards
+     */
+    public function getCards()
+    {
+        return $this->cards;
     }
 }

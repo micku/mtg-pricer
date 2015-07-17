@@ -3,6 +3,7 @@
 namespace AppBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
@@ -29,7 +30,7 @@ class ForeignName
      **/
 
     /**
-     * @ORM\ReferenceOne(targetDocument="Language", simple=true)
+     * @ORM\ReferenceOne(targetDocument="Language", simple=true, inversedBy="foreignNames")
      * @Expose
      **/
     protected $language;

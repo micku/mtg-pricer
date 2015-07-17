@@ -3,6 +3,7 @@
 namespace AppBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
@@ -27,24 +28,15 @@ class Rarity
      */
     protected $name;
 
-    /*
-    protected $cards = null;
+    /**
+     * @ORM\ReferenceMany(targetDocument="Card", mappedBy="rarity")
+     */
+    protected $cards;
 
     public function __construct()
     {
         $this->cards = new ArrayCollection();
     }
-
-    public function addCard($card)
-    {
-        $this->cards[] = $card;
-    }
-
-    public function getCards()
-    {
-        return $this->cards;
-    }
-     */
 
     /**
      * Get id
@@ -77,5 +69,35 @@ class Rarity
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Add card
+     *
+     * @param AppBundle\Document\Card $card
+     */
+    public function addCard(\AppBundle\Document\Card $card)
+    {
+        $this->cards[] = $card;
+    }
+
+    /**
+     * Remove card
+     *
+     * @param AppBundle\Document\Card $card
+     */
+    public function removeCard(\AppBundle\Document\Card $card)
+    {
+        $this->cards->removeElement($card);
+    }
+
+    /**
+     * Get cards
+     *
+     * @return \Doctrine\Common\Collections\Collection $cards
+     */
+    public function getCards()
+    {
+        return $this->cards;
     }
 }

@@ -3,6 +3,7 @@
 namespace AppBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
@@ -27,10 +28,10 @@ class Language
      */
     protected $name;
 
-    /*
-     * @ORM\OneToMany(targetEntity="ForeignName", mappedBy="language")
-    protected $foreignNames;
+    /**
+     * @ORM\ReferenceMany(targetDocument="ForeignName", mappedBy="language")
      **/
+    protected $foreignNames;
 
     /**
      * Get id
@@ -65,4 +66,38 @@ class Language
         return $this->name;
     }
 
+    public function __construct()
+    {
+        $this->foreignNames = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add foreignName
+     *
+     * @param AppBundle\Document\ForeignName $foreignName
+     */
+    public function addForeignName(\AppBundle\Document\ForeignName $foreignName)
+    {
+        $this->foreignNames[] = $foreignName;
+    }
+
+    /**
+     * Remove foreignName
+     *
+     * @param AppBundle\Document\ForeignName $foreignName
+     */
+    public function removeForeignName(\AppBundle\Document\ForeignName $foreignName)
+    {
+        $this->foreignNames->removeElement($foreignName);
+    }
+
+    /**
+     * Get foreignNames
+     *
+     * @return \Doctrine\Common\Collections\Collection $foreignNames
+     */
+    public function getForeignNames()
+    {
+        return $this->foreignNames;
+    }
 }
