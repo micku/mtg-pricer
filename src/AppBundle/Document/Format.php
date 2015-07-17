@@ -10,11 +10,11 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
- * @ORM\Document(collection="legality")
+ * @ORM\Document(collection="format")
  *
  * @ExclusionPolicy("all")
  */
-class Legality
+class Format
 {
     /**
      * @ORM\Id
@@ -26,7 +26,7 @@ class Legality
      * @ORM\String
      * @Expose
      */
-    protected $format;
+    protected $name;
 
     /**
      * @ORM\String
@@ -35,7 +35,7 @@ class Legality
     protected $isLegal;
 
     /**
-     * @ORM\ReferenceMany(targetDocument="Card", mappedBy="legalities")
+     * @ORM\ReferenceMany(targetDocument="Card", mappedBy="formats")
      **/
     protected $cards;
 
@@ -55,33 +55,33 @@ class Legality
     }
 
     /**
-     * Set format
+     * Set name
      *
-     * @param string $format
-     * @return Legality
+     * @param string $name
+     * @return Format
      */
-    public function setFormat($format)
+    public function setName($name)
     {
-        $this->format = $format;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get format
+     * Get name
      *
      * @return string 
      */
-    public function getFormat()
+    public function getName()
     {
-        return $this->format;
+        return $this->name;
     }
 
     /**
      * Set isLegal
      *
      * @param string $isLegal
-     * @return Legality
+     * @return Format
      */
     public function setIsLegal($isLegal)
     {

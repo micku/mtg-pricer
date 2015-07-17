@@ -17,12 +17,6 @@ use JMS\Serializer\Annotation\VirtualProperty;
 class Ruling
 {
     /**
-     * @ORM\Id
-     * @Expose
-     */
-    protected $id;
-
-    /**
      * @ORM\Date
      * @Expose
      */
@@ -33,16 +27,6 @@ class Ruling
      * @Expose
      */
     protected $text;
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set date

@@ -43,6 +43,7 @@ class ImportCommand extends ContainerAwareCommand
             $filename = 'ORI';
         }
         $filename .= '-x.json';
+        $output->writeln('File to parse: '.$filename);
 
         $dir = $this->getContainer()->get('kernel')->getRootDir().'/Resources/CardsData/';
         $doctrine = $this->getContainer()->get('doctrine_mongodb');
@@ -195,11 +196,33 @@ class ImportCommand extends ContainerAwareCommand
                     $newCard->addType($superType);
                 }
 
-                //// Add Legalities
-                //ToDo
+                //// Add Formats
+                $legalities = $this->insertReference(
+                    $card,
+                    'legalities',
+                    $dbmanager,
+                    $doctrine,
+                    'AppBundle:Format',
+                    '\AppBundle\Document\Format'
+                );
+                foreach($legalities as &$legality)
+                {
+                    $newCard->addFormat($legality);
+                }
 
                 //// Add Rulings
-                //ToDo
+                if (array_key_exists('rulings', $card))
+                {
+                    foreach($card['rulings'] as $rulingstr)
+                    {
+                        $date = strtotime($rulingstr['date']);
+                        $date = new \DateTime($rulingstr['date']);
+                        $ruling = new \AppBundle\Document\Ruling();
+                        $ruling->setDate($date);
+                        $ruling->setText($rulingstr['text']);
+                        $newCard->addRuling($ruling);
+                    }
+                }
 
                 //// Add Colors
                 $colors = $this->insertReference(
@@ -248,14 +271,15 @@ class ImportCommand extends ContainerAwareCommand
         $objs = Array();
         if (array_key_exists($cardIndex, $card))
         {
-            $this->output->writeln($cardIndex);
-            $this->output->writeln('|_'.gettype($card[$cardIndex]));
-
             if (gettype($card[$cardIndex]) == 'array')
             {
-                $this->output->writeln('  |_In Array');
-                foreach($card[$cardIndex] as &$valstr)
+                foreach($card[$cardIndex] as $keystr => $valstr)
                 {
+                    if (gettype($keystr) == 'string')
+                    {
+                        $valstr = $keystr;
+                    }
+
                     $objs[] = $this->createInstance(
                         $doctrineType,
                         $valstr,
@@ -267,7 +291,6 @@ class ImportCommand extends ContainerAwareCommand
             }
             else
             {
-                $this->output->writeln('  |_In Else');
                 $objs[] = $this->createInstance(
                     $doctrineType,
                     $card[$cardIndex],

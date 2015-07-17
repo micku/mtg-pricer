@@ -22,13 +22,6 @@ class ForeignName
      */
     protected $name;
 
-    /*
-     * @ORM\ManyToOne(targetEntity="Card", inversedBy="foreignNames")
-     * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
-     * @Expose
-    protected $card;
-     **/
-
     /**
      * @ORM\ReferenceOne(targetDocument="Language", simple=true, inversedBy="foreignNames")
      * @Expose

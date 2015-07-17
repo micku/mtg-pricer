@@ -139,13 +139,13 @@ class Card
     protected $subTypes;
 
     /**
-     * @ORM\ReferenceMany(targetDocument="Legality", simple=true, inversedBy="cards")
+     * @ORM\ReferenceMany(targetDocument="Format", simple=true, inversedBy="cards")
      * @Expose
      **/
-    protected $legalities;
+    protected $formats;
 
     /**
-     * @ORM\ReferenceMany(targetDocument="Ruling", simple=true, inversedBy="cards")
+     * @ORM\EmbedMany(targetDocument="Ruling")
      * @Expose
      **/
     protected $rulings;
@@ -158,7 +158,6 @@ class Card
 
     public function __construct()
     {
-        //$this->rarity = new ArrayCollection();
         /*
         $this->foreignNames = new ArrayCollection();
          */
@@ -167,7 +166,7 @@ class Card
         $this->superTypes = new ArrayCollection();
         $this->types = new ArrayCollection();
         $this->subTypes = new ArrayCollection();
-        $this->legalities = new ArrayCollection();
+        $this->formats = new ArrayCollection();
         $this->rulings = new ArrayCollection();
         $this->sets = new ArrayCollection();
     }
@@ -545,13 +544,13 @@ class Card
     }
 
     /**
-     * Remove legalities
+     * Remove formats
      *
-     * @param \AppBundle\Document\Legality $legalities
+     * @param \AppBundle\Document\Format $formats
      */
-    public function removeLegality(\AppBundle\Document\Legality $legalities)
+    public function removeFormat(\AppBundle\Document\Format $formats)
     {
-        $this->legalities->removeElement($legalities);
+        $this->formats->removeElement($formats);
     }
 
     /**
@@ -707,23 +706,23 @@ class Card
     }
 
     /**
-     * Add legality
+     * Add format
      *
-     * @param AppBundle\Document\Legality $legality
+     * @param AppBundle\Document\Format $format
      */
-    public function addLegality(\AppBundle\Document\Legality $legality)
+    public function addFormat(\AppBundle\Document\Format $format)
     {
-        $this->legalities[] = $legality;
+        $this->formats[] = $format;
     }
 
     /**
-     * Get legalities
+     * Get formats
      *
-     * @return \Doctrine\Common\Collections\Collection $legalities
+     * @return \Doctrine\Common\Collections\Collection $formats
      */
-    public function getLegalities()
+    public function getFormats()
     {
-        return $this->legalities;
+        return $this->formats;
     }
 
     /**
