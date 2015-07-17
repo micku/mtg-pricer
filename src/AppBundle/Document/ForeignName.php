@@ -1,48 +1,35 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Document;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
- * @ORM\Entity
- * @ORM\Table("foreignname")
+ * @ORM\EmbeddedDocument
  *
  * @ExclusionPolicy("all")
  */
 class ForeignName
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     * @Expose
-     */
-    protected $id;
-
-    // Add language
-
-    /**
-     * @ORM\Column(type="string", length=512)
+     * @ORM\String
      * @Expose
      */
     protected $name;
 
-    /**
+    /*
      * @ORM\ManyToOne(targetEntity="Card", inversedBy="foreignNames")
      * @ORM\JoinColumn(name="card_id", referencedColumnName="id")
      * @Expose
-     **/
     protected $card;
+     **/
 
     /**
-     * @ORM\ManyToOne(targetEntity="Language")
-     * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
+     * @ORM\ReferenceOne(targetDocument="Language", simple=true)
      * @Expose
      **/
     protected $language;
@@ -80,46 +67,23 @@ class ForeignName
         return $this->name;
     }
 
-    /**
-     * Set card
-     *
-     * @param \AppBundle\Entity\Card $card
-     * @return ForeignName
-     */
-    public function setCard(\AppBundle\Entity\Card $card = null)
-    {
-        $this->card = $card;
-
-        return $this;
-    }
-
-    /**
-     * Get card
-     *
-     * @return \AppBundle\Entity\Card 
-     */
-    public function getCard()
-    {
-        return $this->card;
-    }
 
     /**
      * Set language
      *
-     * @param \AppBundle\Entity\Language $language
-     * @return ForeignName
+     * @param AppBundle\Document\Language $language
+     * @return self
      */
-    public function setLanguage(\AppBundle\Entity\Language $language = null)
+    public function setLanguage(\AppBundle\Document\Language $language)
     {
         $this->language = $language;
-
         return $this;
     }
 
     /**
      * Get language
      *
-     * @return \AppBundle\Entity\Language 
+     * @return AppBundle\Document\Language $language
      */
     public function getLanguage()
     {

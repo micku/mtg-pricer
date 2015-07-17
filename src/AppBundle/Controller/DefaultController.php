@@ -14,8 +14,8 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $cards = $this->getDoctrine()
-            ->getRepository('AppBundle:Card')
+        $cards = $this->get('doctrine_mongodb')
+            ->getRepository('AppBundle:BlockSet')
             ->findAll();
 
         return $this->render('default/index.html.twig', array(
@@ -30,10 +30,10 @@ class DefaultController extends Controller
     public function reloadDataAction()
     {
         $dir = $this->get('kernel')->getRootDir().'/Resources/CardsData/';
-        $doctrine = $this->getDoctrine();
+        $doctrine = $this->get('doctrine_mongodb');
         $dbmanager = $doctrine->getManager();
 
-        $filename = 'M15-x.json';
+        $filename = 'ORI-x.json';
 
         $setJson = file_get_contents($dir.$filename);
         $setCards = json_decode($setJson, true);
@@ -49,10 +49,10 @@ class DefaultController extends Controller
 
         if (!$set)
         {
-            $set = new \AppBundle\Entity\BlockSet();
+            $set = new \AppBundle\Document\BlockSet();
             $set->setName($setCards['name']);
             $set->setCode($setCode);
-            $set->setMagicCardsInfoCode($setCards['magicCardsInfoCode']);
+            $set->setMagicCardsInfoCode(( array_key_exists('magicCardsInfoCode', $setCards) ? $setCards['magicCardsInfoCode'] : ''));
             $set->setBlock($setCards['type']);
             $dbmanager->persist($set);
             $dbmanager->flush();
@@ -71,7 +71,7 @@ class DefaultController extends Controller
 
             if (!$newCard)
             {
-                $newCard = new \AppBundle\Entity\Card();
+                $newCard = new \AppBundle\Document\Card();
 
                 $newCard->setName($card['name']);
                 $newCard->setImageName($card['imageName']);
@@ -88,16 +88,81 @@ class DefaultController extends Controller
                 $newCard->setLayout(@$card['layout']);
                 $newCard->setMultiverseId(@$card['multiverseid']);
 
+                if (array_key_exists('colors', $card))
+                {
+                    foreach($card['colors'] as &$colorstr)
+                    {
+                        $color = $doctrine->getRepository('AppBundle:Color')
+                            ->findOneBy(array('name' => $colorstr));
+                        if (!$color)
+                        {
+                            $color = new \AppBundle\Document\Color();
+                            $color->setName($colorstr);
+                            $dbmanager->persist($color);
+                            $dbmanager->flush();
+                        }
+                        $newCard->addColor($color);
+                    }
+                }
+
+                $languagestr = 'English';
+                $namestr = $card['name'];
+
+                $language = $doctrine->getRepository('AppBundle:Language')
+                    ->findOneBy(array('name' => $languagestr));
+                if (!$language)
+                {
+                    $language = new \AppBundle\Document\Language();
+                    $language->setName($languagestr);
+                    $dbmanager->persist($language);
+                    $dbmanager->flush();
+                }
+
+                $name = new \AppBundle\Document\ForeignName();
+                $name->setName($namestr);
+                $name->setLanguage($language);
+                //$name->setCard($newCard);
+                //$dbmanager->persist($name);
+                //$dbmanager->flush();
+                $newCard->addForeignName($name);
+
+                if (array_key_exists('foreignNames', $card))
+                {
+                    foreach($card['foreignNames'] as &$foreignName)
+                    {
+                        $languagestr = $foreignName['language'];
+                        $namestr = $foreignName['name'];
+
+                        $language = $doctrine->getRepository('AppBundle:Language')
+                            ->findOneBy(array('name' => $languagestr));
+                        if (!$language)
+                        {
+                            $language = new \AppBundle\Document\Language();
+                            $language->setName($languagestr);
+                            $dbmanager->persist($language);
+                            $dbmanager->flush();
+                        }
+
+                        $name = new \AppBundle\Document\ForeignName();
+                        $name->setName($namestr);
+                        $name->setLanguage($language);
+                        //$name->setCard($newCard);
+                        //$dbmanager->persist($name);
+                        $newCard->addForeignName($name);
+                    }
+                }
+
                 $dbmanager->persist($newCard);
                 $dbmanager->flush();
 
+                /*
                 foreach($card['types'] as &$typestr)
                 {
                     $type = $doctrine->getRepository('AppBundle:Type')
                         ->findOneBy(array('name' => $typestr));
                     if (!$type)
                     {
-                        $type = new \AppBundle\Entity\Type();
+                        $type = new \AppBundle\Document\Type();
                         $type->setName($typestr);
                         $dbmanager->persist($type);
                         $dbmanager->flush();
@@ -113,7 +178,7 @@ class DefaultController extends Controller
                         ->findOneBy(array('name' => $raritystr));
                     if (!$rarity)
                     {
-                        $rarity = new \AppBundle\Entity\Rarity();
+                        $rarity = new \AppBundle\Document\Rarity();
                         $rarity->setName($raritystr);
                         $dbmanager->persist($rarity);
                         $dbmanager->flush();
@@ -129,7 +194,7 @@ class DefaultController extends Controller
                             ->findOneBy(array('name' => $subTypestr));
                         if (!$subType)
                         {
-                            $subType = new \AppBundle\Entity\SubType();
+                            $subType = new \AppBundle\Document\SubType();
                             $subType->setName($subTypestr);
                             $dbmanager->persist($subType);
                             $dbmanager->flush();
@@ -146,7 +211,7 @@ class DefaultController extends Controller
                             ->findOneBy(array('name' => $superTypestr));
                         if (!$superType)
                         {
-                            $superType = new \AppBundle\Entity\SuperType();
+                            $superType = new \AppBundle\Document\SuperType();
                             $superType->setName($superTypestr);
                             $dbmanager->persist($superType);
                             $dbmanager->flush();
@@ -163,7 +228,7 @@ class DefaultController extends Controller
                             ->findOneBy(array('format' => $format, 'isLegal' => $legalitiestr));
                         if (!$legality)
                         {
-                            $legality = new \AppBundle\Entity\Legality();
+                            $legality = new \AppBundle\Document\Legality();
                             $legality->setFormat($format);
                             $legality->setIsLegal($legalitiestr);
                             $dbmanager->persist($legality);
@@ -183,7 +248,7 @@ class DefaultController extends Controller
                             ->findOneBy(array('date' => $date, 'text' => $rulingstr));
                         if (!$ruling)
                         {
-                            $ruling = new \AppBundle\Entity\Ruling();
+                            $ruling = new \AppBundle\Document\Ruling();
                             $ruling->setDate($date);
                             $ruling->setText($rulingstr['text']);
                             $dbmanager->persist($ruling);
@@ -193,89 +258,18 @@ class DefaultController extends Controller
                     }
                 }
 
-                if (array_key_exists('colors', $card))
-                {
-                    foreach($card['colors'] as &$colorstr)
-                    {
-                        $color = $doctrine->getRepository('AppBundle:Color')
-                            ->findOneBy(array('name' => $colorstr));
-                        if (!$color)
-                        {
-                            $color = new \AppBundle\Entity\Color();
-                            $color->setName($colorstr);
-                            $dbmanager->persist($color);
-                            $dbmanager->flush();
-                        }
-                        $newCard->addColor($color);
-                    }
-                }
 
-                $languagestr = 'English';
-                $namestr = $card['name'];
-
-                $language = $doctrine->getRepository('AppBundle:Language')
-                    ->findOneBy(array('name' => $languagestr));
-                if (!$language)
-                {
-                    $language = new \AppBundle\Entity\Language();
-                    $language->setName($languagestr);
-                    $dbmanager->persist($language);
-                    //$dbmanager->flush();
-                }
-
-                $dbmanager->persist($newCard);
-                $name = $doctrine->getRepository('AppBundle:ForeignName')
-                    ->findOneBy(array('name' => $namestr, 'language' => $languagestr));
-                if (!$name)
-                {
-                    $name = new \AppBundle\Entity\ForeignName();
-                    $name->setName($namestr);
-                    $name->setLanguage($language);
-                    $name->setCard($newCard);
-                    $dbmanager->persist($name);
-                    //$dbmanager->flush();
-                }
-
-                if (array_key_exists('foreignNames', $card))
-                {
-                    foreach($card['foreignNames'] as &$foreignName)
-                    {
-                        $languagestr = $foreignName['language'];
-                        $namestr = $foreignName['name'];
-
-                        $language = $doctrine->getRepository('AppBundle:Language')
-                            ->findOneBy(array('name' => $languagestr));
-                        if (!$language)
-                        {
-                            $language = new \AppBundle\Entity\Language();
-                            $language->setName($languagestr);
-                            $dbmanager->persist($language);
-                            $dbmanager->flush();
-                        }
-
-                        $name = $doctrine->getRepository('AppBundle:ForeignName')
-                            ->findOneBy(array('name' => $namestr, 'language' => $languagestr));
-                        if (!$name)
-                        {
-                            $name = new \AppBundle\Entity\ForeignName();
-                            $name->setName($namestr);
-                            $name->setLanguage($language);
-                            $name->setCard($newCard);
-                            $dbmanager->persist($name);
-                            //$dbmanager->flush();
-                        }
-                        //$newCard->addForeignName($name);
-                    }
-                }
 
                 $dbmanager->persist($newCard);
                 $dbmanager->flush();
+                 */
             }
             else
             {
                 // ToDo: Update
             }
         }
+        
 
     }
 }

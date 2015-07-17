@@ -25,3 +25,4 @@ parameters:
     mkm_access_secret: 'xxx'
 
     mongodb_server:     ''
+    mongodb_default_database: ''

@@ -1,17 +1,15 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Document;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
- * @ORM\Entity
- * @ORM\Table("color")
+ * @ORM\Document(collection="colors")
  *
  * @ExclusionPolicy("all")
  */
@@ -19,28 +17,27 @@ class Color
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      * @Expose
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=512)
+     * @ORM\String
      * @Expose
      */
     protected $name;
 
-    /**
-     * ManyToMany(targetEnetity="Card", mappedBy="colors")
-     **/
+    /*
+      ManyToMany(targetEnetity="Card", mappedBy="colors")
     protected $cards;
+     */
 
     public function __construct()
     {
-        $this->cards = new ArrayCollection();
+        //$this->cards = new ArrayCollection();
     }
 
+    /*
     public function addCard(Card $card)
     {
         $this->cards[] = $card;
@@ -50,6 +47,7 @@ class Color
     {
         return $this->cards;
     }
+     */
 
     /**
      * Get id

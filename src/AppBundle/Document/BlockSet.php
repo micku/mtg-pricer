@@ -1,17 +1,15 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Document;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
- * @ORM\Entity
- * @ORM\Table("blockset")
+ * @ORM\Document(collection="block_sets")
  *
  * @ExclusionPolicy("all")
  */
@@ -19,55 +17,35 @@ class BlockSet
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      * @Expose
      */
     protected $id;
 
+    public function __construct()
+    {
+        //$this->cards = new ArrayCollection();
+    }
+
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\String
      * @Expose
      */
     protected $name;
-
     /**
-     * @ORM\Column(type="string", length=5)
+     * @ORM\String
      * @Expose
      */
     protected $code;
-
     /**
-     * @ORM\Column(type="string", length=5)
+     * @ORM\String
      * @Expose
      */
     protected $magicCardsInfoCode;
-
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\String
      * @Expose
      */
     protected $block;
-
-    /**
-     * ManyToMany(targetEnetity="Card", mappedBy="sets")
-     **/
-    protected $cards;
-
-    public function __construct()
-    {
-        $this->cards = new ArrayCollection();
-    }
-
-    public function addCard(Card $card)
-    {
-        $this->cards[] = $card;
-    }
-
-    public function getCards()
-    {
-        return $this->cards;
-    }
 
     /**
      * Get id
@@ -79,23 +57,23 @@ class BlockSet
         return $this->id;
     }
 
+
     /**
      * Set name
      *
      * @param string $name
-     * @return Set
+     * @return self
      */
     public function setName($name)
     {
         $this->name = $name;
-
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string $name
      */
     public function getName()
     {
@@ -106,19 +84,18 @@ class BlockSet
      * Set code
      *
      * @param string $code
-     * @return Set
+     * @return self
      */
     public function setCode($code)
     {
         $this->code = $code;
-
         return $this;
     }
 
     /**
      * Get code
      *
-     * @return string 
+     * @return string $code
      */
     public function getCode()
     {
@@ -129,19 +106,18 @@ class BlockSet
      * Set magicCardsInfoCode
      *
      * @param string $magicCardsInfoCode
-     * @return Set
+     * @return self
      */
     public function setMagicCardsInfoCode($magicCardsInfoCode)
     {
         $this->magicCardsInfoCode = $magicCardsInfoCode;
-
         return $this;
     }
 
     /**
      * Get magicCardsInfoCode
      *
-     * @return string 
+     * @return string $magicCardsInfoCode
      */
     public function getMagicCardsInfoCode()
     {
@@ -152,19 +128,18 @@ class BlockSet
      * Set block
      *
      * @param string $block
-     * @return Set
+     * @return self
      */
     public function setBlock($block)
     {
         $this->block = $block;
-
         return $this;
     }
 
     /**
      * Get block
      *
-     * @return string 
+     * @return string $block
      */
     public function getBlock()
     {

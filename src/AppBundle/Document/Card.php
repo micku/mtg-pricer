@@ -1,19 +1,15 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Document;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\VirtualProperty;
 
-#use AppBundle\Entity\Rarity;
-
 /**
- * @ORM\Entity
- * @ORM\Table("card")
+ * @ORM\Document(collection="cards")
  *
  * @ExclusionPolicy("all")
  **/
@@ -23,146 +19,110 @@ class Card
 
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      * @Expose
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=512)
+     * @ORM\String
      * @Expose
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\String
      * @Expose
      */
     protected $manaCost;
 
     /**
-     * @ORM\Column(type="decimal", scale=2)
+     * @ORM\Float
      * @Expose
      */
     protected $cmc;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\String
      * @Expose
      */
     protected $type;
 
     /**
-     * @ORM\Column(type="string", length=512)
+     * @ORM\String
      * @Expose
      */
     protected $text;
 
     /**
-     * @ORM\Column(type="string", length=512)
+     * @ORM\String
      * @Expose
      */
     protected $flavor;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\String
      * @Expose
      */
     protected $artist;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\String
      * @Expose
      */
     protected $number;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\String
      * @Expose
      */
     protected $power;
 
     /**
-     * @ORM\Column(type="string", length=10)
+     * @ORM\String
      * @Expose
      */
     protected $toughness;
 
     /**
-     * @ORM\Column(type="string", length=10)
+     * @ORM\String
      * @Expose
      */
     protected $layout;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Int
      * @Expose
      */
     protected $multiverseId;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\String
      * @Expose
      */
     protected $imageName;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Rarity")
-     * @ORM\JoinColumn(name="rarity_id", referencedColumnName="id")
+     * @ORM\ReferenceMany(targetDocument="BlockSet", simple=true)
+     * @Expose
      **/
-    protected $rarity;
+    protected $sets = array();
 
     /**
-     * @ORM\OneToMany(targetEntity="ForeignName", mappedBy="card")
+     * @ORM\EmbedMany(targetDocument="Color")
+     * @Expose
      **/
-    protected $foreignNames;
+    protected $colors = array();
 
     /**
-     * @ORM\ManyToMany(targetEntity="Color", inversedBy="cards")
-     * @ORM\JoinTable(name="cards_colors")
+     * @ORM\EmbedMany(targetDocument="ForeignName")
+     * @Expose
      **/
-    protected $colors;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="SuperType", inversedBy="cards")
-     * @ORM\JoinTable(name="cards_superType")
-     **/
-    protected $superTypes;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Type", inversedBy="cards")
-     * @ORM\JoinTable(name="cards_type")
-     **/
-    protected $types;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="SubType", inversedBy="cards")
-     * @ORM\JoinTable(name="cards_subType")
-     **/
-    protected $subTypes;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Legality", inversedBy="cards")
-     * @ORM\JoinTable(name="cards_legality")
-     **/
-    protected $legalities;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Ruling", inversedBy="cards")
-     * @ORM\JoinTable(name="cards_ruling")
-     **/
-    protected $rulings;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Set", inversedBy="cards")
-     * @ORM\JoinTable(name="cards_set")
-     **/
-    protected $sets;
+    protected $foreignNames = array();
 
     public function __construct()
     {
         //$this->rarity = new ArrayCollection();
+        /*
         $this->foreignNames = new ArrayCollection();
 
         $this->colors = new ArrayCollection();
@@ -172,105 +132,7 @@ class Card
         $this->legalities = new ArrayCollection();
         $this->rulings = new ArrayCollection();
         $this->sets = new ArrayCollection();
-    }
-
-    public function addForeignNames(ForeignName $foreignName)
-    {
-        $foreignName->setCard($this);
-        $this->foreignNames[] = $foreignName;
-    }
-
-    public function getForeignNames()
-    {
-        return $this->foreignNames;
-    }
-
-    public function setRarity($rarity)
-    {
-        $rarity->addCard($this);
-        $this->rarity = $rarity;
-    }
-
-    public function getRarity()
-    {
-        return $this->rarity;
-    }
-
-    public function addColor(Color $color)
-    {
-        $color->addCard($this);
-        $this->colors[] = $color;
-    }
-
-    public function getColors()
-    {
-        return $this->colors;
-    }
-
-    public function addSuperType(SuperType $superType)
-    {
-        $superType->addCard($this);
-        $this->superTypes[] = $superType;
-    }
-
-    public function getSuperTypes()
-    {
-        return $this->superTypes;
-    }
-
-    public function addType(Type $type)
-    {
-        $type->addCard($this);
-        $this->types[] = $type;
-    }
-
-    public function getTypes()
-    {
-        return $this->types;
-    }
-
-    public function addSubType(SubType $subType)
-    {
-        $subType->addCard($this);
-        $this->subTypes[] = $subType;
-    }
-
-    public function getSubTypes()
-    {
-        return $this->subTypes;
-    }
-
-    public function addLegality(Legality $legality)
-    {
-        $legality->addCard($this);
-        $this->legalities[] = $legality;
-    }
-
-    public function getLegalities()
-    {
-        return $this->legalities;
-    }
-
-    public function addRuling(Ruling $ruling)
-    {
-        $ruling->addCard($this);
-        $this->rulings[] = $ruling;
-    }
-
-    public function getRulings()
-    {
-        return $this->rulings;
-    }
-
-    public function addSet(Set $set)
-    {
-        $set->addCard($this);
-        $this->sets[] = $set;
-    }
-
-    public function getSets()
-    {
-        return $this->sets;
+         */
     }
 
     /**
@@ -580,5 +442,138 @@ class Card
     public function getImageName()
     {
         return $this->imageName;
+    }
+
+    /**
+     * Add foreignNames
+     *
+     * @param \AppBundle\Document\ForeignName $foreignNames
+     * @return Card
+     */
+    public function addForeignName(\AppBundle\Document\ForeignName $foreignNames)
+    {
+        $this->foreignNames[] = $foreignNames;
+
+        return $this;
+    }
+
+    /**
+     * Remove foreignNames
+     *
+     * @param \AppBundle\Document\ForeignName $foreignNames
+     */
+    public function removeForeignName(\AppBundle\Document\ForeignName $foreignNames)
+    {
+        $this->foreignNames->removeElement($foreignNames);
+    }
+
+    /**
+     * Remove colors
+     *
+     * @param \AppBundle\Document\Color $colors
+     */
+    public function removeColor(\AppBundle\Document\Color $colors)
+    {
+        $this->colors->removeElement($colors);
+    }
+
+    /**
+     * Remove superTypes
+     *
+     * @param \AppBundle\Document\SuperType $superTypes
+     */
+    public function removeSuperType(\AppBundle\Document\SuperType $superTypes)
+    {
+        $this->superTypes->removeElement($superTypes);
+    }
+
+    /**
+     * Remove types
+     *
+     * @param \AppBundle\Document\Type $types
+     */
+    public function removeType(\AppBundle\Document\Type $types)
+    {
+        $this->types->removeElement($types);
+    }
+
+    /**
+     * Remove subTypes
+     *
+     * @param \AppBundle\Document\SubType $subTypes
+     */
+    public function removeSubType(\AppBundle\Document\SubType $subTypes)
+    {
+        $this->subTypes->removeElement($subTypes);
+    }
+
+    /**
+     * Remove legalities
+     *
+     * @param \AppBundle\Document\Legality $legalities
+     */
+    public function removeLegality(\AppBundle\Document\Legality $legalities)
+    {
+        $this->legalities->removeElement($legalities);
+    }
+
+    /**
+     * Remove rulings
+     *
+     * @param \AppBundle\Document\Ruling $rulings
+     */
+    public function removeRuling(\AppBundle\Document\Ruling $rulings)
+    {
+        $this->rulings->removeElement($rulings);
+    }
+
+    /**
+     * Remove sets
+     *
+     * @param \AppBundle\Document\Set $sets
+     */
+    public function removeSet(\AppBundle\Document\BlockSet $sets)
+    {
+        $this->sets->removeElement($sets);
+    }
+
+    /**
+     * Add set
+     *
+     * @param AppBundle\Document\BlockSet $set
+     */
+    public function addSet(\AppBundle\Document\BlockSet $set)
+    {
+        $this->sets[] = $set;
+    }
+
+    /**
+     * Get sets
+     *
+     * @return \Doctrine\Common\Collections\Collection $sets
+     */
+    public function getSets()
+    {
+        return $this->sets;
+    }
+
+    /**
+     * Add color
+     *
+     * @param AppBundle\Document\Color $color
+     */
+    public function addColor(\AppBundle\Document\Color $color)
+    {
+        $this->colors[] = $color;
+    }
+
+    /**
+     * Get colors
+     *
+     * @return \Doctrine\Common\Collections\Collection $colors
+     */
+    public function getColors()
+    {
+        return $this->colors;
     }
 }

@@ -1,9 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Document;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
@@ -19,34 +18,35 @@ class Legality
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      * @Expose
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\String
      * @Expose
      */
     protected $format;
 
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\String
      * @Expose
      */
     protected $isLegal;
 
-    /**
+    /*
      * ManyToMany(targetEnetity="Card", mappedBy="legalities")
-     **/
     protected $cards;
+     **/
 
+    /*
     public function __construct()
     {
         $this->cards = new ArrayCollection();
     }
+     */
 
+    /*
     public function addCard(Card $card)
     {
         $this->cards[] = $card;
@@ -56,6 +56,7 @@ class Legality
     {
         return $this->cards;
     }
+     */
 
     /**
      * Get id

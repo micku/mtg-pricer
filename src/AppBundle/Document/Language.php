@@ -1,52 +1,36 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Document;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
- * @ORM\Entity
- * @ORM\Table("rarity")
+ * @ORM\Document(collection="language")
  *
  * @ExclusionPolicy("all")
  */
-class Rarity
+class Language
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      * @Expose
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=512)
+     * @ORM\String
      * @Expose
      */
     protected $name;
 
-    protected $cards = null;
-
-    public function __construct()
-    {
-        $this->cards = new ArrayCollection();
-    }
-
-    public function addCard($card)
-    {
-        $this->cards[] = $card;
-    }
-
-    public function getCards()
-    {
-        return $this->cards;
-    }
+    /*
+     * @ORM\OneToMany(targetEntity="ForeignName", mappedBy="language")
+    protected $foreignNames;
+     **/
 
     /**
      * Get id
@@ -62,7 +46,7 @@ class Rarity
      * Set name
      *
      * @param string $name
-     * @return Rarity
+     * @return Language
      */
     public function setName($name)
     {
@@ -80,4 +64,5 @@ class Rarity
     {
         return $this->name;
     }
+
 }
