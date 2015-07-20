@@ -11,3 +11,8 @@ $container->setParameter('database_password', $db['pass']);
  */
 
 $container->setParameter('mongodb_server', $_ENV['MONGOLAB_URI']);
+$container->setParameter('mongodb_default_database', $_ENV['MONGOLAB_DB']);
+$container->setParameter('mkm_app_token', $_ENV['MKM_APP_TOKEN']);
+$container->setParameter('mkm_app_secret', $_ENV['MKM_APP_SECRET']);
+$container->setParameter('mkm_access_token', $_ENV['MKM_ACCESS_TOKEN']);
+$container->setParameter('mkm_access_secret', $_ENV['MKM_ACCESS_SECRET']);
