@@ -24,18 +24,18 @@ var FoundCards = React.createClass({
     },
 
     componentDidMount: function() {
-        CardStore.addSearchListener(this._onSearch);
+        CardStore.addReceiveSearchListener(this._onSearch);
     },
 
     componentWillUnmount: function() {
-        CardStore.removeSearchListener(this._onSearch);
+        CardStore.removeReceiveSearchListener(this._onSearch);
     },
 
     render: function() {
         var cardNodes = this.state.cards.map(getCardListItem);
 
         return (
-                <div className="foundCards row">
+                <div className="foundCards ui middle aligned divided list">
                     {cardNodes}
                 </div>
                );

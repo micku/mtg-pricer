@@ -5,16 +5,21 @@ var FoundCard = React.createClass({
     render: function() {
         var image_url = 'http://api.mtgdb.info/content/card_images/' + this.props.card.multiverse_id + '.jpeg';
         return (
-                <div className="foundCard col s12 m3">
-                    <div className="card small blue-grey darken-1">
-                        <div className="card-image">
-                          <img src={image_url} />
-                          <p className="cardName card-title">{this.props.card.name}</p>
+                <div className="foundCard item">
+                    <div className="content ui grid">
+                        <div className="four wide column">
+                            <a className="cardName">{this.props.card.name}</a>
+                            <div className="foundTerm" dangerouslySetInnerHTML={this.foreignName(this.props.card, this.props.search_term)}></div>
                         </div>
-                        <div className="card-content white-text">
-                            <a onClick={this._onClick} href="#"><i className="fa fa-plus-square-o fa-2x right"></i></a>
-                            <p className="cardName">{this.props.card.name}</p>
-                            <p className="foundTerm" dangerouslySetInnerHTML={this.foreignName(this.props.card, this.props.search_term)}></p>
+                        <div className="two wide column">
+                            <div className="mana-cost" dangerouslySetInnerHTML={this.manaCost(this.props.card)}></div>
+                        </div>
+                        <div className="nine wide column">
+                        </div>
+                        <div className="one wide column">
+                            <div className="content">
+                                <a onClick={this._onClick} href="#"><i className="fa fa-plus-square-o fa-2x right"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -28,15 +33,37 @@ var FoundCard = React.createClass({
 
     foreignName: function(card, term) {
         var regexp = new RegExp("(" + term + ")","ig");
+        var foreignName = null;
+        card.foreign_names.forEach(function(f) {
+            if (!foreignName && f.name.match(regexp)) {
+                foreignName = f;
+            }
+        });
         var text = {
             __html: 
-                "["+card.foreign_names[0].language.name+"] "+ card.foreign_names[0].name
+                "["+foreignName.language.name+"] "+ foreignName.name
                 .replace(
                         regexp,
                         '<i>$1</i>'
                         )
         };
         return text;
+    },
+
+    manaCost: function(card) {
+        if (!card.mana_cost)
+            return { __html: "" };
+
+        cardImageTpl = '<span class="mana small s{cost}"></span>';
+        cost = card.mana_cost.match(/{([^}]+)}/g);
+        costImages = "";
+        cost.forEach(function(c) {
+            code = c.match(/[0-9a-zA-Z]/g).join('').toLowerCase();
+            costImages += cardImageTpl.replace('{cost}', code);
+        });
+        return {
+            __html: costImages
+        };
     }
 });
 

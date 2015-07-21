@@ -1,13 +1,34 @@
 var SearchActionCreators = require('../actions/SearchActionCreators');
+var CardStore = require('../stores/CardStore');
 var React = require('react');
+var classNames = require('classnames');
 
 var SearchField = React.createClass({
     getInitialState: function() {
-        return {text: ''};
+        return {text: '', loading: false};
     },
 
     componentDidMount: function() {
         $(React.findDOMNode(this.refs.searchTerm)).focus();
+        CardStore.addSearchListener(this.setLoading);
+        CardStore.addReceiveSearchListener(this.setNotLoading);
+    },
+
+    componentWillUnmount: function() {
+        CardStore.removeSearchListener(this.setLoading);
+        CardStore.removeReceiveSearchListener(this.setNotLoading);
+    },
+
+    setLoading: function() {
+        var newState = this.state;
+        newState.loading = true;
+        this.setState(newState);
+    },
+
+    setNotLoading: function() {
+        var newState = this.state;
+        newState.loading = false;
+        this.setState(newState);
     },
 
     handleSubmit: function(e, a, b, c) {
@@ -15,26 +36,28 @@ var SearchField = React.createClass({
         var term = React.findDOMNode(this.refs.searchTerm).value.trim();
 
         SearchActionCreators.search(term);
-        //this.props.onSearchSubmit({'term': term});
         return;
     },
 
     render: function() {
+        var classes = classNames({
+            'ui': true,
+            'action': true,
+            'left': true,
+            'icon': true,
+            'input': true,
+            'loading': this.state.loading
+        });
         return (
-                <div className="row">
-                    <form className="searchField col s12" onSubmit={this.handleSubmit}>
-                        <div className="input-field col s8">
+                <form className="searchField col s12" onSubmit={this.handleSubmit}>
+                    <div className={classes}>
+                        <i className="search icon"></i>
                             <input type="text" placeholder="Insert card name" ref="searchTerm" onChange={this.handleSubmit}>
-                                {this.props.text}
+                                {this.state.text}
                             </input>
-                        </div>
-                        <div className="input-field col s4">
-                            <button type="submit" className="btn waves-effect waves-light blue-grey lighten-3">Search
-                                <i className="fa fa-search fa-2x right"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                            <button type="submit" className="ui teal button">Search</button>
+                    </div>
+                </form>
                );
     }
 });

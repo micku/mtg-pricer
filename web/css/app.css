@@ -16,8 +16,10 @@
     color: #fff;
 }
 
-.card .card-content .foundTerm i {
-    background-color: red;
+.foundCard .foundTerm i {
+    background-color: #f2711c;
+    border-radius: 0.28571429rem;
+    color: #fff;
 }
 
 .toc-wrapper {

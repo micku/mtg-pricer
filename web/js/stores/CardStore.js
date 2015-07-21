@@ -27,11 +27,11 @@ var CardStore = assign({}, EventEmitter.prototype, {
         this.emit(RECEIVE_EVENT);
     },
 
-    addSearchListener: function(callback) {
+    addReceiveSearchListener: function(callback) {
         this.on(RECEIVE_EVENT, callback);
     },
 
-    removeSearchListener: function(callback) {
+    removeReceiveSearchListener: function(callback) {
         this.removeListener(RECEIVE_EVENT, callback);
     },
 

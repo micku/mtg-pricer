@@ -6,7 +6,3 @@ React.render(
         <PricerApp url="/api/search/{term}/" />,
         document.getElementById('app')
 );
-
-$(document).ready(function(){
-    $('.toc-wrapper').pushpin({ top: $('nav').height() });
-});
