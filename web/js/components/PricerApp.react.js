@@ -16,21 +16,21 @@ var PricerApp = React.createClass({
     },
     render: function() {
         return (
-                <div className="section app">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col l10">
-                                <div className="section">
-                                    <SearchField />
-                                    <FoundCards />
-                                </div>
-                            </div>
-                            <div className="col l2">
-                                <div className="toc-wrapper pin-top">
-                                    <div className="section">
-                                        <WishList />
-                                    </div>
-                                </div>
+                <div className="ui grid app">
+                    <div className="sixteen wide column">
+                        <div className="section">
+                            <SearchField />
+                        </div>
+                    </div>
+                    <div className="eleven wide column">
+                        <div className="section">
+                            <FoundCards />
+                        </div>
+                    </div>
+                    <div className="five wide column">
+                        <div className="">
+                            <div className="section">
+                                <WishList />
                             </div>
                         </div>
                     </div>

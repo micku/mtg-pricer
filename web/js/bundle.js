@@ -198,18 +198,18 @@ var FoundCard = React.createClass({displayName: "FoundCard",
         return (
                 React.createElement("div", {className: "foundCard item"}, 
                     React.createElement("div", {className: "content ui grid"}, 
-                        React.createElement("div", {className: "four wide column"}, 
+                        React.createElement("div", {className: "six wide column"}, 
                             React.createElement("a", {className: "cardName"}, this.props.card.name), 
                             React.createElement("div", {className: "foundTerm", dangerouslySetInnerHTML: this.foreignName(this.props.card, this.props.search_term)})
                         ), 
                         React.createElement("div", {className: "two wide column"}, 
                             React.createElement("div", {className: "mana-cost", dangerouslySetInnerHTML: this.manaCost(this.props.card)})
                         ), 
-                        React.createElement("div", {className: "nine wide column"}
+                        React.createElement("div", {className: "six wide column"}
                         ), 
-                        React.createElement("div", {className: "one wide column"}, 
-                            React.createElement("div", {className: "content"}, 
-                                React.createElement("a", {onClick: this._onClick, href: "#"}, React.createElement("i", {className: "fa fa-plus-square-o fa-2x right"}))
+                        React.createElement("div", {className: "two wide column middle aligned right aligned"}, 
+                            React.createElement("button", {className: "ui icon button mini green", onClick: this._onClick}, 
+                                React.createElement("i", {className: "fa fa-plus fa-1x right"})
                             )
                         )
                     )
@@ -330,21 +330,21 @@ var PricerApp = React.createClass({displayName: "PricerApp",
     },
     render: function() {
         return (
-                React.createElement("div", {className: "section app"}, 
-                    React.createElement("div", {className: "container"}, 
-                        React.createElement("div", {className: "row"}, 
-                            React.createElement("div", {className: "col l10"}, 
-                                React.createElement("div", {className: "section"}, 
-                                    React.createElement(SearchField, null), 
-                                    React.createElement(FoundCards, null)
-                                )
-                            ), 
-                            React.createElement("div", {className: "col l2"}, 
-                                React.createElement("div", {className: "toc-wrapper pin-top"}, 
-                                    React.createElement("div", {className: "section"}, 
-                                        React.createElement(WishList, null)
-                                    )
-                                )
+                React.createElement("div", {className: "ui grid app"}, 
+                    React.createElement("div", {className: "sixteen wide column"}, 
+                        React.createElement("div", {className: "section"}, 
+                            React.createElement(SearchField, null)
+                        )
+                    ), 
+                    React.createElement("div", {className: "eleven wide column"}, 
+                        React.createElement("div", {className: "section"}, 
+                            React.createElement(FoundCards, null)
+                        )
+                    ), 
+                    React.createElement("div", {className: "five wide column"}, 
+                        React.createElement("div", {className: ""}, 
+                            React.createElement("div", {className: "section"}, 
+                                React.createElement(WishList, null)
                             )
                         )
                     )
@@ -362,6 +362,7 @@ var React = require('react');
 var classNames = require('classnames');
 
 var SearchField = React.createClass({displayName: "SearchField",
+
     getInitialState: function() {
         return {text: '', loading: false};
     },
@@ -455,19 +456,15 @@ var WishList = React.createClass({displayName: "WishList",
 
     render: function() {
         var wishListItems = (
-                React.createElement("li", {className: "collection-item"}, "No items yet!")
+                React.createElement("div", {className: "ui segment"}, React.createElement("p", null, "No items yet!"))
                 );
         if (this.state.wishList.length>0) {
             wishListItems = this.state.wishList.map(getWishListItem);
         }
 
         return (
-                React.createElement("div", {className: "row"}, 
-                    React.createElement("div", {className: "col s12"}, 
-                        React.createElement("ul", {className: "wishlist collection"}, 
-                            wishListItems
-                        )
-                    )
+                React.createElement("div", {className: "wishlist ui segments"}, 
+                    wishListItems
                 )
                );
     },
@@ -482,16 +479,35 @@ module.exports = WishList;
 },{"../components/WishListItem.react":13,"../stores/WishListStore":17,"react":178}],13:[function(require,module,exports){
 var WishListCardActionCreators = require('../actions/WishListCardActionCreators');
 var CardPrice = require('../components/CardPrice.react');
+var WishListStore = require('../stores/WishListStore');
 var React = require('react');
+var classNames = require('classnames');
 
 var WishListItem = React.createClass({displayName: "WishListItem",
 
+    getInitialState: function() {
+        var s = {
+            card: this.props.card,
+            loading: false
+        }
+        return s;
+    },
+
     render: function() {
+        var classes = classNames({
+            'ui': true,
+            'clearing': true,
+            'segment': true,
+            'wish-list-item': true,
+            'loading': this.state.loading
+        });
         return (
-                React.createElement("li", {className: "wish-list-item collection-item"}, 
-                    React.createElement("a", {onClick: this._onRemove, href: "#"}, React.createElement("i", {className: "fa fa-minus-square-o fa-1x right"})), 
-                    React.createElement("span", null, this.props.card.quantity, "x"), " ", this.props.card.name, 
-                    React.createElement(CardPrice, {card: this.props.card})
+                React.createElement("div", {className: classes}, 
+                        React.createElement("button", {className: "ui right floated icon tiny button", onClick: this._onRemove}, 
+                            React.createElement("i", {className: "fa fa-trash-o fa-1x"})
+                        ), 
+                    React.createElement("strong", null, React.createElement("span", null, this.state.card.quantity, "x"), " ", this.state.card.name), 
+                    React.createElement("div", null, React.createElement(CardPrice, {card: this.state.card}))
                 )
                );
     },
@@ -505,7 +521,7 @@ var WishListItem = React.createClass({displayName: "WishListItem",
 
 module.exports = WishListItem;
 
-},{"../actions/WishListCardActionCreators":4,"../components/CardPrice.react":7,"react":178}],14:[function(require,module,exports){
+},{"../actions/WishListCardActionCreators":4,"../components/CardPrice.react":7,"../stores/WishListStore":17,"classnames":1,"react":178}],14:[function(require,module,exports){
 var keyMirror = require('keymirror');
 
 module.exports = {
@@ -596,6 +612,8 @@ var assign = require('object-assign');
 
 var ActionTypes = PricerConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
+var GET_PRICE_EVENT = 'add';
+var PRICE_RECEIVED_EVENT = 'price_received';
 
 var _wishList = [];
 
@@ -610,6 +628,32 @@ var WishListStore = assign({}, EventEmitter.prototype, {
 
     removeChangeListener: function(callback) {
         this.removeListener(CHANGE_EVENT, callback);
+    },
+
+    emitGetPrice: function() {
+        this.emitChange();
+        this.emit(GET_PRICE_EVENT);
+    },
+
+    addGetPriceListener: function(callback) {
+        this.on(GET_PRICE_EVENT, callback);
+    },
+
+    removeGetPriceListener: function(callback) {
+        this.removeListener(GET_PRICE_EVENT, callback);
+    },
+
+    emitPriceReceived: function() {
+        this.emitChange();
+        this.emit(PRICE_RECEIVED_EVENT);
+    },
+
+    addPriceReceivedListener: function(callback) {
+        this.on(PRICE_RECEIVED_EVENT, callback);
+    },
+
+    removePriceReceivedListener: function(callback) {
+        this.removeListener(PRICE_RECEIVED_EVENT, callback);
     },
 
     get: function(id) {
@@ -648,14 +692,14 @@ WishListStore.dispatchToken = PricerAppDispatcher.register(function(action) {
             var storedCard = WishListStore.get(card_id);
             storedCard.unit_price = prices.AVG;
             storedCard.quantity_price = prices.AVG * storedCard.quantity;
-            WishListStore.emitChange();
+            WishListStore.emitPriceReceived();
             break;
         case ActionTypes.ADDED_TO_WISHLIST:
             var card = action.card;
             var storedCard = WishListStore.get(card.id);
             var quantity = storedCard.quantity;
             //Call API, AVG price, multiply per quantity
-            WishListStore.emitChange();
+            WishListStore.emitGetPrice();
             break;
         case ActionTypes.CLICK_ADD_TO_WISHLIST:
             var card = action.card;

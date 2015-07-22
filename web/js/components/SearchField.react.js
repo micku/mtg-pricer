@@ -4,6 +4,7 @@ var React = require('react');
 var classNames = require('classnames');
 
 var SearchField = React.createClass({
+
     getInitialState: function() {
         return {text: '', loading: false};
     },

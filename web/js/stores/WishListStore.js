@@ -5,6 +5,8 @@ var assign = require('object-assign');
 
 var ActionTypes = PricerConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
+var GET_PRICE_EVENT = 'add';
+var PRICE_RECEIVED_EVENT = 'price_received';
 
 var _wishList = [];
 
@@ -19,6 +21,32 @@ var WishListStore = assign({}, EventEmitter.prototype, {
 
     removeChangeListener: function(callback) {
         this.removeListener(CHANGE_EVENT, callback);
+    },
+
+    emitGetPrice: function() {
+        this.emitChange();
+        this.emit(GET_PRICE_EVENT);
+    },
+
+    addGetPriceListener: function(callback) {
+        this.on(GET_PRICE_EVENT, callback);
+    },
+
+    removeGetPriceListener: function(callback) {
+        this.removeListener(GET_PRICE_EVENT, callback);
+    },
+
+    emitPriceReceived: function() {
+        this.emitChange();
+        this.emit(PRICE_RECEIVED_EVENT);
+    },
+
+    addPriceReceivedListener: function(callback) {
+        this.on(PRICE_RECEIVED_EVENT, callback);
+    },
+
+    removePriceReceivedListener: function(callback) {
+        this.removeListener(PRICE_RECEIVED_EVENT, callback);
     },
 
     get: function(id) {
@@ -57,14 +85,14 @@ WishListStore.dispatchToken = PricerAppDispatcher.register(function(action) {
             var storedCard = WishListStore.get(card_id);
             storedCard.unit_price = prices.AVG;
             storedCard.quantity_price = prices.AVG * storedCard.quantity;
-            WishListStore.emitChange();
+            WishListStore.emitPriceReceived();
             break;
         case ActionTypes.ADDED_TO_WISHLIST:
             var card = action.card;
             var storedCard = WishListStore.get(card.id);
             var quantity = storedCard.quantity;
             //Call API, AVG price, multiply per quantity
-            WishListStore.emitChange();
+            WishListStore.emitGetPrice();
             break;
         case ActionTypes.CLICK_ADD_TO_WISHLIST:
             var card = action.card;

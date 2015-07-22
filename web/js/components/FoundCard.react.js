@@ -7,19 +7,19 @@ var FoundCard = React.createClass({
         return (
                 <div className="foundCard item">
                     <div className="content ui grid">
-                        <div className="four wide column">
+                        <div className="six wide column">
                             <a className="cardName">{this.props.card.name}</a>
                             <div className="foundTerm" dangerouslySetInnerHTML={this.foreignName(this.props.card, this.props.search_term)}></div>
                         </div>
                         <div className="two wide column">
                             <div className="mana-cost" dangerouslySetInnerHTML={this.manaCost(this.props.card)}></div>
                         </div>
-                        <div className="nine wide column">
+                        <div className="six wide column">
                         </div>
-                        <div className="one wide column">
-                            <div className="content">
-                                <a onClick={this._onClick} href="#"><i className="fa fa-plus-square-o fa-2x right"></i></a>
-                            </div>
+                        <div className="two wide column middle aligned right aligned">
+                            <button className="ui icon button mini green" onClick={this._onClick}>
+                                <i className="fa fa-plus fa-1x right"></i>
+                            </button>
                         </div>
                     </div>
                 </div>

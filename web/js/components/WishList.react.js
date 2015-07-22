@@ -30,19 +30,15 @@ var WishList = React.createClass({
 
     render: function() {
         var wishListItems = (
-                <li className="collection-item">No items yet!</li>
+                <div className="ui segment"><p>No items yet!</p></div>
                 );
         if (this.state.wishList.length>0) {
             wishListItems = this.state.wishList.map(getWishListItem);
         }
 
         return (
-                <div className="row">
-                    <div className="col s12">
-                        <ul className="wishlist collection">
-                            {wishListItems}
-                        </ul>
-                    </div>
+                <div className="wishlist ui segments">
+                    {wishListItems}
                 </div>
                );
     },
