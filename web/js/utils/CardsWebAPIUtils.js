@@ -18,14 +18,15 @@ module.exports = {
         }
         if (term === this.lastTerm) {
             CardsServerActionCreators.receiveBySearchTerm(this.lastResult);
+            if (this.searching) clearTimeout(this.searching);
+            if (this.xhr) this.xhr.abort();
             return;
         }
         if (this.searching) clearTimeout(this.searching);
+        if (this.xhr) this.xhr.abort();
         var that = this;
-        this.lastTerm = term;
 
         this.searching = setTimeout(function() {
-            if (that.xhr) that.xhr.abort();
             that.xhr = $.ajax({
                 url: WEB_API_URL.replace('{term}', term),
                 dataType: 'json',
@@ -33,6 +34,7 @@ module.exports = {
             })
             .done(function(data) {
                 CardsServerActionCreators.receiveBySearchTerm(data);
+                that.lastTerm = term;
                 that.lastResult = data;
                 that.searching = null;
                 that.xhr = null;
