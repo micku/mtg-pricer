@@ -47,6 +47,7 @@ var SearchField = React.createClass({
             'left': true,
             'icon': true,
             'input': true,
+            'fluid': true,
             'loading': this.state.loading
         });
         return (

@@ -22,3 +22,23 @@
     color: #fff;
 }
 
+.main.container {
+    margin-top: 6em;
+}
+
+.ui.menu .item img.logo {
+  margin-right: 1.5em;
+}
+
+.foundCard .card-text {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.foundCard .set-icon {
+    display: block;
+    float: left;
+    margin: 5px 10px 0 0;
+    width: 24px;
+}

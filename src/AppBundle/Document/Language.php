@@ -29,6 +29,12 @@ class Language
     protected $name;
 
     /**
+     * @ORM\String
+     * @Expose
+     */
+    protected $code;
+
+    /**
      * @ORM\ReferenceMany(targetDocument="ForeignName", mappedBy="language")
      **/
     protected $foreignNames;
@@ -64,6 +70,29 @@ class Language
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     * @return Language
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string 
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 
     public function __construct()

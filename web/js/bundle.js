@@ -198,16 +198,18 @@ var FoundCard = React.createClass({displayName: "FoundCard",
         return (
                 React.createElement("div", {className: "foundCard item"}, 
                     React.createElement("div", {className: "content ui grid"}, 
-                        React.createElement("div", {className: "six wide column"}, 
-                            React.createElement("a", {className: "cardName"}, this.props.card.name), 
+                        React.createElement("div", {className: "five wide column"}, 
+                            React.createElement("img", {src: this.setIcon(this.props.card), className: "set-icon"}), React.createElement("a", {className: "cardName"}, this.props.card.name), 
                             React.createElement("div", {className: "foundTerm", dangerouslySetInnerHTML: this.foreignName(this.props.card, this.props.search_term)})
                         ), 
                         React.createElement("div", {className: "two wide column"}, 
                             React.createElement("div", {className: "mana-cost", dangerouslySetInnerHTML: this.manaCost(this.props.card)})
                         ), 
-                        React.createElement("div", {className: "six wide column"}
+                        React.createElement("div", {className: "eight wide column"}, 
+                            React.createElement("span", null, this.props.card.type), 
+                            React.createElement("div", {className: "card-text", dangerouslySetInnerHTML: this.iconifyText(this.props.card.text||"")})
                         ), 
-                        React.createElement("div", {className: "two wide column middle aligned right aligned"}, 
+                        React.createElement("div", {className: "one wide column middle aligned right aligned"}, 
                             React.createElement("button", {className: "ui icon button mini green", onClick: this._onClick}, 
                                 React.createElement("i", {className: "fa fa-plus fa-1x right"})
                             )
@@ -232,7 +234,7 @@ var FoundCard = React.createClass({displayName: "FoundCard",
         });
         var text = {
             __html: 
-                "["+foreignName.language.name+"] "+ foreignName.name
+                '<i class="'+foreignName.language.code+' flag"></i>'+ foreignName.name
                 .replace(
                         regexp,
                         '<i>$1</i>'
@@ -241,20 +243,39 @@ var FoundCard = React.createClass({displayName: "FoundCard",
         return text;
     },
 
+    cardImageTpl: '<span class="mana small s{cost}"></span>',
+
     manaCost: function(card) {
         if (!card.mana_cost)
             return { __html: "" };
 
-        cardImageTpl = '<span class="mana small s{cost}"></span>';
-        cost = card.mana_cost.match(/{([^}]+)}/g);
-        costImages = "";
+        var cost = card.mana_cost.match(/{([^}]+)}/g);
+        var costImages = "";
+        var that = this;
         cost.forEach(function(c) {
             code = c.match(/[0-9a-zA-Z]/g).join('').toLowerCase();
-            costImages += cardImageTpl.replace('{cost}', code);
+            costImages += that.cardImageTpl.replace('{cost}', code);
         });
         return {
             __html: costImages
         };
+    },
+
+    iconifyText: function(text) {
+        var that = this;
+        text = text.replace(/{([^}]*)}/g, function(match, p1){
+            return that.cardImageTpl.replace('{cost}', p1.toLowerCase())
+        });
+        return {
+            __html: '<i>'+text+'</i>'
+        };
+    },
+
+    setIcon: function(card) {
+        rarity_code = card.sets[0].code.toLowerCase() + '_';
+        rarity_code += card.rarity.name.substring(0, 1).toLowerCase().replace('b', 'c');
+
+        return '/images/sets/'+rarity_code+'.png';
     }
 });
 
@@ -336,12 +357,12 @@ var PricerApp = React.createClass({displayName: "PricerApp",
                             React.createElement(SearchField, null)
                         )
                     ), 
-                    React.createElement("div", {className: "eleven wide column"}, 
+                    React.createElement("div", {className: "twelve wide column"}, 
                         React.createElement("div", {className: "section"}, 
                             React.createElement(FoundCards, null)
                         )
                     ), 
-                    React.createElement("div", {className: "five wide column"}, 
+                    React.createElement("div", {className: "four wide column"}, 
                         React.createElement("div", {className: ""}, 
                             React.createElement("div", {className: "section"}, 
                                 React.createElement(WishList, null)
@@ -405,6 +426,7 @@ var SearchField = React.createClass({displayName: "SearchField",
             'left': true,
             'icon': true,
             'input': true,
+            'fluid': true,
             'loading': this.state.loading
         });
         return (

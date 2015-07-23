@@ -22,12 +22,12 @@ var PricerApp = React.createClass({
                             <SearchField />
                         </div>
                     </div>
-                    <div className="eleven wide column">
+                    <div className="twelve wide column">
                         <div className="section">
                             <FoundCards />
                         </div>
                     </div>
-                    <div className="five wide column">
+                    <div className="four wide column">
                         <div className="">
                             <div className="section">
                                 <WishList />
