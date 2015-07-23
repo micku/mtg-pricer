@@ -14,6 +14,8 @@ module.exports = {
     getCardsBySearchTerm: function(term) {
         if (term.length < 3) {
             CardsServerActionCreators.receiveBySearchTerm([]);
+            if (this.searching) clearTimeout(this.searching);
+            if (this.xhr) this.xhr.abort();
             return;
         }
         if (term === this.lastTerm) {
