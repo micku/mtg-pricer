@@ -171,6 +171,10 @@ class MkmApiClient
     {
         $cards = $this->getCard($cardName)[2]['product'];
         $cheapest = array_reduce($cards, function($a, $b) {
+            if ($a['rarity']=='Special')
+            {
+                return $b;
+            }
             return $a['priceGuide']['AVG'] < $b['priceGuide']['AVG'] ? $a : $b;
         }, array_shift($cards));
         $productId = $cheapest['idProduct'];
