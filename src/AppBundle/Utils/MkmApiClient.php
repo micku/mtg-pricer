@@ -161,7 +161,6 @@ class MkmApiClient
          */
         $apiOutput          = $this->doApiRequest($url);
         $decoded            = json_decode($apiOutput[1], true);
-        // $decoded            = simplexml_load_string($content);
         $apiOutput[2]        = $decoded;
 
         return $apiOutput;
@@ -184,15 +183,9 @@ class MkmApiClient
         $apiOutput          = $this->doApiRequest($url);
         $decoded            = json_decode($apiOutput[1], true);
 
-        //print_r($decoded['article']);
-        //return gettype($decoded['article']);
         $prices = [];
         foreach ($decoded['article'] as &$article)
         {
-            //if ($article['price']==60)
-            //{
-                //return $article;
-            //}
             if ($article['isFoil']==false
                 and $article['isAltered']==false
                 and $article['isSigned']==false
@@ -202,49 +195,21 @@ class MkmApiClient
                 $prices[] = $article['price'];
             }
         }
-        //$prices[] = 10000;
-        //return $prices;
 
         $average = array_sum($prices) / count($prices);
         $wo_outliers = $this->remove_outliers($prices);
-        //$standard = stats_standard_deviation($prices);
         $standard = array_sum($wo_outliers) / count($wo_outliers);
 
         return $standard;
-        //return array(
-            //$average,
-            //$standard
-        //);
-
-        // $decoded            = simplexml_load_string($content);
-        //$apiOutput[2]        = $decoded;
-
-        //return $apiOutput;
     }
 
     private function remove_outliers($dataset, $magnitude = 1) {
 
-        $sd_square = function ($x, $mean)
-        {
-            return pow($x - $mean,2);
-        };
-
         $count = count($dataset);
         $mean = array_sum($dataset) / $count; // Calculate the mean
-        $deviation = sqrt(array_sum(array_map($sd_square, $dataset, array_fill(0, $count, $mean))) / $count) * $magnitude; // Calculate standard deviation and times by magnitude
+        $deviation = stats_standard_deviation($dataset) * $magnitude; // Calculate standard deviation and times by magnitude
 
         return array_filter($dataset, function($x) use ($mean, $deviation) { return ($x <= $mean + $deviation && $x >= $mean - $deviation); }); // Return filtered array of values that lie within $mean +- $deviation.
-    }
-
-    // Function to calculate standard deviation (uses sd_square)    
-    private function standard_deviation($array) {
-
-        $sd_square = function ($x, $mean)
-        {
-            return pow($x - $mean,2);
-        };
-        // square root of sum of squares devided by N-1
-        return sqrt(array_sum(array_map($sd_square, $array, array_fill(0,count($array), (array_sum($array) / count($array)) ) ) ) / (count($array)-1) );
     }
 }
 
