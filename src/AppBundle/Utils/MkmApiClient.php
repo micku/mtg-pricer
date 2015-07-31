@@ -146,10 +146,6 @@ class MkmApiClient
         return array($info, $content);
     }
 
-    /**
-     * @Route("/test/", name="test")
-     * @Method("GET")
-     */
     public function getCard($cardName)
     {
         //$url                = "https://www.mkmapi.eu/ws/v1.1/output.json/games";
@@ -171,4 +167,113 @@ class MkmApiClient
         return $apiOutput;
     }
 
+    public function getCardPrice($cardName)
+    {
+        $cards = $this->getCard($cardName)[2]['product'];
+        $cheapest = array_reduce($cards, function($a, $b) {
+            return $a['priceGuide']['AVG'] < $b['priceGuide']['AVG'] ? $a : $b;
+        }, array_shift($cards));
+        $productId = $cheapest['idProduct'];
+
+        $url                = "https://www.mkmapi.eu/ws/v1.1/output.json/articles/".$productId;
+
+        $apiOutput          = $this->doApiRequest($url);
+        $decoded            = json_decode($apiOutput[1], true);
+
+        //print_r($decoded['article']);
+        //return gettype($decoded['article']);
+        $prices = [];
+        foreach ($decoded['article'] as &$article)
+        {
+            //if ($article['price']==60)
+            //{
+                //return $article;
+            //}
+            if ($article['isFoil']==false
+                and $article['isAltered']==false
+                and $article['isSigned']==false
+                and $article['isPlayset']==false
+            )
+            {
+                $prices[] = $article['price'];
+            }
+        }
+        //$prices[] = 10000;
+        //return $prices;
+
+        $average = array_sum($prices) / count($prices);
+        $wo_outliers = $this->remove_outliers($prices);
+        //$standard = stats_standard_deviation($prices);
+        $standard = array_sum($wo_outliers) / count($wo_outliers);
+
+        return $standard;
+        //return array(
+            //$average,
+            //$standard
+        //);
+
+        // $decoded            = simplexml_load_string($content);
+        //$apiOutput[2]        = $decoded;
+
+        //return $apiOutput;
+    }
+
+    private function remove_outliers($dataset, $magnitude = 1) {
+
+        $sd_square = function ($x, $mean)
+        {
+            return pow($x - $mean,2);
+        };
+
+        $count = count($dataset);
+        $mean = array_sum($dataset) / $count; // Calculate the mean
+        $deviation = sqrt(array_sum(array_map($sd_square, $dataset, array_fill(0, $count, $mean))) / $count) * $magnitude; // Calculate standard deviation and times by magnitude
+
+        return array_filter($dataset, function($x) use ($mean, $deviation) { return ($x <= $mean + $deviation && $x >= $mean - $deviation); }); // Return filtered array of values that lie within $mean +- $deviation.
+    }
+
+    // Function to calculate standard deviation (uses sd_square)    
+    private function standard_deviation($array) {
+
+        $sd_square = function ($x, $mean)
+        {
+            return pow($x - $mean,2);
+        };
+        // square root of sum of squares devided by N-1
+        return sqrt(array_sum(array_map($sd_square, $array, array_fill(0,count($array), (array_sum($array) / count($array)) ) ) ) / (count($array)-1) );
+    }
+}
+
+if (!function_exists('stats_standard_deviation')) {
+    /**
+     * This user-land implementation follows the implementation quite strictly;
+     * it does not attempt to improve the code or algorithm in any way. It will
+     * raise a warning if you have fewer than 2 values in your array, just like
+     * the extension does (although as an E_USER_WARNING, not E_WARNING).
+     * 
+     * @param array $a 
+     * @param bool $sample [optional] Defaults to false
+     * @return float|bool The standard deviation or false on error.
+     */
+    function stats_standard_deviation(array $a, $sample = false) {
+        $n = count($a);
+        if ($n === 0) {
+            trigger_error("The array has zero elements", E_USER_WARNING);
+            return false;
+        }
+        if ($sample && $n === 1) {
+            trigger_error("The array has only 1 element", E_USER_WARNING);
+            return false;
+        }
+        $mean = array_sum($a) / $n;
+        $carry = 0.0;
+        foreach ($a as $val) {
+            $d = ((double) $val) - $mean;
+            $carry += $d * $d;
+        };
+        if ($sample) {
+           --$n;
+        }
+        return sqrt($carry / $n);
+    }
 }

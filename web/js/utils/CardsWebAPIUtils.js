@@ -2,9 +2,9 @@ var CardsServerActionCreators = require('../actions/CardsServerActionCreators');
 var WishListCardServerActionCreators = require('../actions/WishListCardServerActionCreators');
 
 var WEB_API_URL = '/api/search/{term}/';
-var WEB_API_PRICE_URL = '/api/card/{card_id}/{card_name}/';
+var WEB_API_PRICE_URL = '/api/card-price/{card_id}/{card_name}/';
 
-module.exports = {
+module.exports = { 
 
     searching: null,
     xhr: null,

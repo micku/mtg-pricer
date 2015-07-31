@@ -14,6 +14,26 @@ class CardPriceRestController extends Controller
 {
     /**
      * @Rest\View
+     * @Rest\Get("/card-price/{card_id}/{card_name}/", name="cardprice")
+     */
+    public function getAvarageCardPriceAction($card_id, $card_name)
+    {
+        $appToken           = $this->container->getParameter('mkm')['app_token'];
+        $appSecret          = $this->container->getParameter('mkm')['app_secret'];
+        $accessToken        = $this->container->getParameter('mkm')['access_token'];
+        $accessSecret       = $this->container->getParameter('mkm')['access_secret'];
+
+        $api = MkmApiClient::getInstance($appToken, $appSecret, $accessToken, $accessSecret);
+        $apiOutput = $api->getCardPrice(urlencode($card_name));
+
+        $price = new CardPrice();
+        $price->card_id = $card_id;
+        $price->price = $apiOutput;
+        return $price;
+    }
+
+    /**
+     * @Rest\View
      * @Rest\Get("/card/{card_id}/{card_name}/", name="cardprice")
      */
     public function getCardPriceAction($card_id, $card_name)
@@ -43,4 +63,5 @@ class CardPrice
 {
     public $card_id;
     public $prices;
+    public $price;
 }

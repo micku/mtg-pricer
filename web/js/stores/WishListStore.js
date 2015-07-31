@@ -81,10 +81,10 @@ WishListStore.dispatchToken = PricerAppDispatcher.register(function(action) {
     switch(action.type) {
         case ActionTypes.PRICE_RECEIVED:
             var card_id = action.card_id;
-            var prices = action.prices;
+            var price = action.price;
             var storedCard = WishListStore.get(card_id);
-            storedCard.unit_price = prices.AVG;
-            storedCard.quantity_price = prices.AVG * storedCard.quantity;
+            storedCard.unit_price = price;
+            storedCard.quantity_price = price * storedCard.quantity;
             WishListStore.emitPriceReceived();
             break;
         case ActionTypes.ADDED_TO_WISHLIST:

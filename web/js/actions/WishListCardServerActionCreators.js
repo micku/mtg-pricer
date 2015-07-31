@@ -10,7 +10,7 @@ module.exports = {
         PricerAppDispatcher.dispatch({
             type: ActionTypes.PRICE_RECEIVED,
             card_id: price.card_id,
-            prices: price.prices
+            price: price.price
         });
     }
 

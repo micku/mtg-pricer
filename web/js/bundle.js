@@ -131,7 +131,7 @@ module.exports = {
         PricerAppDispatcher.dispatch({
             type: ActionTypes.PRICE_RECEIVED,
             card_id: price.card_id,
-            prices: price.prices
+            price: price.price
         });
     }
 
@@ -710,10 +710,10 @@ WishListStore.dispatchToken = PricerAppDispatcher.register(function(action) {
     switch(action.type) {
         case ActionTypes.PRICE_RECEIVED:
             var card_id = action.card_id;
-            var prices = action.prices;
+            var price = action.price;
             var storedCard = WishListStore.get(card_id);
-            storedCard.unit_price = prices.AVG;
-            storedCard.quantity_price = prices.AVG * storedCard.quantity;
+            storedCard.unit_price = price;
+            storedCard.quantity_price = price * storedCard.quantity;
             WishListStore.emitPriceReceived();
             break;
         case ActionTypes.ADDED_TO_WISHLIST:
@@ -774,9 +774,9 @@ var CardsServerActionCreators = require('../actions/CardsServerActionCreators');
 var WishListCardServerActionCreators = require('../actions/WishListCardServerActionCreators');
 
 var WEB_API_URL = '/api/search/{term}/';
-var WEB_API_PRICE_URL = '/api/card/{card_id}/{card_name}/';
+var WEB_API_PRICE_URL = '/api/card-price/{card_id}/{card_name}/';
 
-module.exports = {
+module.exports = { 
 
     searching: null,
     xhr: null,
