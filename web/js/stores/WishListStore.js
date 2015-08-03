@@ -67,6 +67,14 @@ var WishListStore = assign({}, EventEmitter.prototype, {
 
     getAll: function() {
         return _wishList;
+    },
+
+    getTotal: function() {
+        var that = this;
+        return Math.round(
+        _wishList.reduce( function(a, b){
+            return a + that.getPrice(b['id']);
+        }, 0) * 100) / 100;;
     }
 });
 

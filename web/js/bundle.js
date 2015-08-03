@@ -448,11 +448,13 @@ module.exports = SearchField;
 },{"../actions/SearchActionCreators":3,"../stores/CardStore":16,"classnames":1,"react":178}],12:[function(require,module,exports){
 var WishListItem = require('../components/WishListItem.react');
 var WishListStore = require('../stores/WishListStore');
+var classNames = require('classnames');
 var React = require('react');
 
 function getStateFromStores() {
     return {
-        wishList: WishListStore.getAll()
+        wishList: WishListStore.getAll(),
+        total: WishListStore.getTotal()
     };
 }
 
@@ -480,13 +482,25 @@ var WishList = React.createClass({displayName: "WishList",
         var wishListItems = (
                 React.createElement("div", {className: "ui segment"}, React.createElement("p", null, "No items yet!"))
                 );
+        var showTotal = 'display: none';
+        var totalClasses = classNames({
+            'hidden': true,
+            'ui': true,
+            'segment': true
+        });
         if (this.state.wishList.length>0) {
             wishListItems = this.state.wishList.map(getWishListItem);
+            totalClasses = classNames({
+                'hidden': false,
+                'ui': true,
+                'segment': true
+            });
         }
 
         return (
                 React.createElement("div", {className: "wishlist ui segments"}, 
-                    wishListItems
+                    wishListItems, 
+                    React.createElement("div", {className: totalClasses}, "Total: € ", this.state.total.toFixed(2))
                 )
                );
     },
@@ -498,7 +512,7 @@ var WishList = React.createClass({displayName: "WishList",
 
 module.exports = WishList;
 
-},{"../components/WishListItem.react":13,"../stores/WishListStore":17,"react":178}],13:[function(require,module,exports){
+},{"../components/WishListItem.react":13,"../stores/WishListStore":17,"classnames":1,"react":178}],13:[function(require,module,exports){
 var WishListCardActionCreators = require('../actions/WishListCardActionCreators');
 var CardPrice = require('../components/CardPrice.react');
 var WishListStore = require('../stores/WishListStore');
@@ -696,6 +710,14 @@ var WishListStore = assign({}, EventEmitter.prototype, {
 
     getAll: function() {
         return _wishList;
+    },
+
+    getTotal: function() {
+        var that = this;
+        return Math.round(
+        _wishList.reduce( function(a, b){
+            return a + that.getPrice(b['id']);
+        }, 0) * 100) / 100;;
     }
 });
 

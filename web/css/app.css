@@ -1,3 +1,7 @@
+.hidden {
+    display: none;
+}
+
 .foundCard .card-image img {
     margin-top: -18%;
     margin-left: -10%;
