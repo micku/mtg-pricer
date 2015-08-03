@@ -25,6 +25,7 @@ class CardPriceRestController extends Controller
 
         $api = MkmApiClient::getInstance($appToken, $appSecret, $accessToken, $accessSecret);
         $apiOutput = $api->getCardPrice(urlencode($card_name));
+        //return $apiOutput;
 
         $price = new CardPrice();
         $price->card_id = $card_id;

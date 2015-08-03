@@ -149,7 +149,7 @@ class MkmApiClient
     public function getCard($cardName)
     {
         //$url                = "https://www.mkmapi.eu/ws/v1.1/output.json/games";
-        $url                = "https://www.mkmapi.eu/ws/v1.1/output.json/products/".$cardName."/".self::MKM_MTG_ID."/1/true";
+        $url                = "https://www.mkmapi.eu/ws/v1.1/output.json/products/".$cardName."/".self::MKM_MTG_ID."/1/false";
 
         /*
          * Convert the response string into an object
@@ -170,13 +170,26 @@ class MkmApiClient
     {
         $cards = $this->getCard($cardName)[2]['product'];
         $cheapest = array_reduce($cards, function($a, $b) {
-            if ($a['rarity']=='Special')
+            if (
+                $a['idGame'] != self::MKM_MTG_ID
+                || !array_key_exists('rarity', $a)
+                || $a['rarity']=='Special'
+                || $a['rarity']=='Token')
             {
                 return $b;
+            }
+            if (
+                $b['idGame'] != self::MKM_MTG_ID
+                || !array_key_exists('rarity', $b)
+                || $b['rarity']=='Special'
+                || $b['rarity']=='Token')
+            {
+                return $a;
             }
             return $a['priceGuide']['AVG'] < $b['priceGuide']['AVG'] ? $a : $b;
         }, array_shift($cards));
         $productId = $cheapest['idProduct'];
+        //return $cheapest;
 
         $url                = "https://www.mkmapi.eu/ws/v1.1/output.json/articles/".$productId;
 
